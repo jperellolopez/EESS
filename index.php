@@ -51,7 +51,8 @@
     <div class="mb-3">
         <label for="selectCCAA" class="form-label">CCAA: </label>
         <select name="selectCCAA" id="selectCCAA" onChange="updateArrayGasolineras();">
-            <option value="-1">Selecciona CCAA</option>
+
+            <option value="-1">GENERAL</option>
         </select>
         <!--
          <button type="submit" class="btn btn-primary" name="submit">Buscar</button>

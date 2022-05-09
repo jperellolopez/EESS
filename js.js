@@ -2,8 +2,12 @@ var map=null;
 var resultadoGeneral = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres";
 var filtroCCAA = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroCCAA/";
 var arrayGasolineras = [];
-var markers;
+var markers  = L.markerClusterGroup();
 var marker;
+var select = document.getElementById("selectCCAA")
+var zoomGeneral = false;
+var isSetFromCCAA = false;
+
 
 // guardar en array general el contenido de la api (endpoint con + info), que será el que se coja para cargar el mapa por primera vez.  Ir cogiendo datos de ese array para rellenar los formularios de seleccion, haciendo sub-arrays si hace falta
 // por ejemplo, funcion para coger las provincias y eliminar repeticiones y poneras en el select
@@ -20,18 +24,18 @@ var marker;
 
 
 //FORM
-var select = document.getElementById('selectCCAA');
 
 // es necesario poner los nombres de las CCAA manualmente ya que en el JSON sólo está el ID
-var arrCCAA = [ {'IDCCAA': 1, 'Nombre': 'ANDALUCÍA'}, {'IDCCAA':2, 'Nombre':  'ARAGÓN'}, {'IDCCAA':3, 'Nombre':  'ASTURIAS'}, {'IDCCAA':4, 'Nombre':  'BALEARES'}, {'IDCCAA':5, 'Nombre':  'CANARIAS'}, {'IDCCAA':6, 'Nombre':  'CANTABRIA'}, {'IDCCAA':7, 'Nombre':  'CASTILLA LA MANCHA'}, {'IDCCAA':8, 'Nombre':  'CASTILLA Y LEÓN'}, {'IDCCAA':9, 'Nombre':  'CATALUÑA'}, {'IDCCAA':10, 'Nombre':  'C. VALENCIANA'}, {'IDCCAA':11, 'Nombre':  'EXTREMADURA'}, {'IDCCAA':12, 'Nombre':  'GALICIA'}, {'IDCCAA':13, 'Nombre':  'MADRID'}, {'IDCCAA':14, 'Nombre':  'MURCIA'}, {'IDCCAA':15, 'Nombre':  'NAVARRA'}, {'IDCCAA':16, 'Nombre':  'P. VASCO'}, {'IDCCAA':17, 'Nombre':  'LA RIOJA'}, {'IDCCAA':18, 'Nombre':  'CEUTA'}, {'IDCCAA':19, 'Nombre':  'MELILLA'}];
+var arrCCAA = [ {'IDCCAA': 1, 'Nombre': 'ANDALUCÍA', 'Lat': '37.6000000', 'Lng': '-4.5000000'}, {'IDCCAA':2, 'Nombre':  'ARAGÓN', 'Lat': '41.5000000', 'Lng': '-0.6666700'}, {'IDCCAA':3, 'Nombre':  'ASTURIAS', 'Lat': '43.3666200', 'Lng': '-5.8611200'}, {'IDCCAA':4, 'Nombre':  'BALEARES', 'Lat': '39.6099200', 'Lng': '3.0294800'}, {'IDCCAA':5, 'Nombre':  'CANARIAS', 'Lat': '28.0000000', 'Lng': '-15.5000000'}, {'IDCCAA':6, 'Nombre':  'CANTABRIA', 'Lat': '43.2000000', 'Lng': '-4.0333300'}, {'IDCCAA':7, 'Nombre':  'CASTILLA LA MANCHA', 'Lat': '39.8581', 'Lng': '-4.02263'}, {'IDCCAA':8, 'Nombre':  'CASTILLA Y LEÓN', 'Lat': '42.60003', 'Lng': '-5.57032'}, {'IDCCAA':9, 'Nombre':  'CATALUÑA', 'Lat': '41.8204600', 'Lng': '1.8676800'}, {'IDCCAA':10, 'Nombre':  'C. VALENCIANA', 'Lat': '39.5000000', 'Lng': '-0.7500000'}, {'IDCCAA':11, 'Nombre':  'EXTREMADURA', 'Lat': '39.1666700', 'Lng': '-6.1666700'}, {'IDCCAA':12, 'Nombre':  'GALICIA', 'Lat': '42.7550800', 'Lng': '-7.8662100'}, {'IDCCAA':13, 'Nombre':  'MADRID', 'Lat': '40.4165000', 'Lng': '-3.7025600'}, {'IDCCAA':14, 'Nombre':  'MURCIA', 'Lat': '37.9870400', 'Lng': '-1.1300400'}, {'IDCCAA':15, 'Nombre':  'NAVARRA', 'Lat': '42.8233000', 'Lng': '-1.6513800'}, {'IDCCAA':16, 'Nombre':  'P. VASCO', 'Lat': ' 43.0000000', 'Lng': '-2.7500000'}, {'IDCCAA':17, 'Nombre':  'LA RIOJA', 'Lat': '42.3000000', 'Lng': '-2.5000000'}, {'IDCCAA':18, 'Nombre':  'CEUTA', 'Lat': '35.8902800', 'Lng': '-5.3075000'}, {'IDCCAA':19, 'Nombre':  'MELILLA', 'Lat': '35.2936900', 'Lng': '-2.9383300'}];
 
 // crear opciones del formulario de CCAA
 for (let x in arrCCAA) {
-    let opt = document.createElement('option');
-    opt.value= arrCCAA[x]['IDCCAA'];
-    opt.innerHTML= arrCCAA[x]['Nombre'];
-    select.appendChild(opt);
+    let option = document.createElement('option');
+    option.value= arrCCAA[x]['IDCCAA'];
+    option.innerHTML= arrCCAA[x]['Nombre'];
+    select.appendChild(option);
 }
+
 
 //MAPA
 // funcion onload en index.php
@@ -46,7 +50,7 @@ async function setupMap(posicion) {
     initMap(posicion.coords.latitude, posicion.coords.longitude);
     //fetchApiData(resultadoGeneral);
      await updateArrayGasolineras();
-    placeMarkers();
+    //placeMarkers();
 }
 
 // error popup alerts
@@ -68,28 +72,30 @@ function showError(error) {
     }
 }
 
-// if geolocalization is not allowed, center in Madrid, then generate markers
+// if si la geolocalización no está permitida, se centra en todo el país
 async function setupMapNoGeolocalizationEnabled() {
-    initMap(40.4165, -3.70256);
+    zoomGeneral = true;
+    initMap(40.463667, -3.74922);
     //fetchApiData(resultadoGeneral);
     await updateArrayGasolineras();
     placeMarkers();
 }
 
-//initizalizes the map
+//inicialización del mapa
 function initMap(lat, lng) {
-        map = new L.map('map').setView([lat, lng], 14, {preferCanvas: true});
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+    let zoom = (!zoomGeneral ? 14 : 5);
+
+    map = new L.map('map').setView([lat, lng], zoom, {preferCanvas: true});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
 }
 
 // coloca los marcadores en el mapa
 function placeMarkers() {
 
-    markers = L.markerClusterGroup();
-    map.removeLayer(markers);
+        markers.clearLayers();
 
     for (let x in arrayGasolineras) {
         arrayGasolineras[x]['Latitud'] = arrayGasolineras[x]['Latitud'].replace(/,/g, '.');
@@ -97,6 +103,7 @@ function placeMarkers() {
         let lat = parseFloat(arrayGasolineras[x]['Latitud']);
         let lng = parseFloat(arrayGasolineras[x]['Longitud (WGS84)']);
 
+        //popup con la información al hacer click en el marcador
         var popup = L.popup()
             .setLatLng(lat, lng)
             .setContent(arrayGasolineras[x]['Dirección']);
@@ -114,24 +121,43 @@ function hideloader() {
 }
 
  async function getAPI() {
-     var sel = document.getElementById("selectCCAA")
-     var opt = sel.options[sel.selectedIndex]
 
-     if (opt.value > 0 && opt.value < 10) {
+     // formateo de los números de ccaa menores a 10 para incluirlos en el endpoint
+     let opt = select.options[select.selectedIndex];
+     if (opt.value > 0 && opt.value < 10 && opt.value.charAt(0) !== "0") {
          opt.value = "0"+opt.value;
      }
-
      console.log(opt.value)
 
-     var response;
+     // almacena las coordenadas de la ccaa elegida en el formulario
+     let ccaalatlng;
+     arrCCAA.forEach(function(ccaa) {
+         if (opt.value == ccaa.IDCCAA) {
+             ccaalatlng = ccaa.Lat + ", " + ccaa.Lng;
+             map.flyTo([ccaa.Lat, ccaa.Lng], 8);
 
-     if (opt.value == -1 || opt.value == null) {
+         }
+     });
+     console.log(ccaalatlng)
+
+     // fetch de la información de los endpoints elegidos, uso de booleanos para controlar en qué orden se entra y el nivel de zoom
+     let response;
+     // cuando se entra por primera vez (coordenadas locales, vista muy cercana)
+     if (opt.value == -1 && !isSetFromCCAA) {
          response = await fetch(resultadoGeneral)
-     } else {
-         response = await fetch(filtroCCAA + opt.value);
-     }
 
-    var data = await response.json()
+         // cuando se entra desde una CCAA (recarga marcadores y cambia a vista lejana)
+     } else if (opt.value == -1 && isSetFromCCAA) {
+         response = await fetch(resultadoGeneral)
+         map.flyTo([40.463667, -3.74922], 5);
+     }
+     // cuando se elige una CCAA (carga sólo los de dicha zona y cambia a vista cercana)
+     else {
+         response = await fetch(filtroCCAA + opt.value);
+         isSetFromCCAA = true;
+     }
+    let data = await response.json()
+
      return data.ListaEESSPrecio
 
     }
@@ -140,110 +166,7 @@ function hideloader() {
 async function updateArrayGasolineras(){
 
     arrayGasolineras = await getAPI();
-    hideloader();
+    hideloader()
+    placeMarkers()
     console.log('Array general', arrayGasolineras)
 }
-
-//console.log('arrayGasolineras', arrayGasolineras)
-
-// función para recoger la info principal: lee el json con los datos generales, los introduce en un array para usarlos en los formularios, genera los marcadores
-/*
-function fetchApiData(url) {
-
-fetch(url)
-    .then(response => response.json())
-    .then(function (result) {
-        hideloader();
-        console.log("Result", result) // resultado de la lectura
-        var markers = L.markerClusterGroup();
-
-        for (var x in result.ListaEESSPrecio) { // se selecciona solo el array de objetos gasolinera
-
-            //var gasolinera = result.ListaEESSPrecio[x]
-            //arrayGasolineras.push(result.ListaEESSPrecio[x]);
-            result.ListaEESSPrecio[x]['Latitud'] = result.ListaEESSPrecio[x]['Latitud'].replace(/,/g, '.');
-            result.ListaEESSPrecio[x]['Longitud (WGS84)'] = result.ListaEESSPrecio[x]['Longitud (WGS84)'].replace(/,/g, '.');
-            let lat = parseFloat(result.ListaEESSPrecio[x]['Latitud']);
-            let lng = parseFloat(result.ListaEESSPrecio[x]['Longitud (WGS84)']);
-
-            // info displayed when clicking in a marker
-            var popup = L.popup()
-                .setLatLng(lat, lng)
-                .setContent(result.ListaEESSPrecio[x]['Dirección']);
-
-            var marker = L.marker([lat, lng]).bindPopup(popup).openPopup();
-
-            markers.addLayer(marker);
-
-        }
-
-        map.addLayer(markers);
-
-    })
-    .catch(error =>console.log("error", error));
-}
-*/
-
-// reads the API json in order to generate markers
-/*
-function generateMarkers(apiData) {
-
-    var markers = L.markerClusterGroup();
-
-
-        for (var x in apiData.ListaEESSPrecio) {
-
-
-
-            var gasolinera = apiData.ListaEESSPrecio[x];
-
-            gasolinera['Latitud'] = gasolinera['Latitud'].replace(/,/g, '.');
-            gasolinera['Longitud (WGS84)'] = gasolinera['Longitud (WGS84)'].replace(/,/g, '.');
-            let lat = parseFloat(gasolinera['Latitud']);
-            let lng = parseFloat(gasolinera['Longitud (WGS84)']);
-
-            // info displayed when clicking in a marker
-            var popup = L.popup()
-                .setLatLng(lat, lng)
-                .setContent(gasolinera['Dirección']);
-
-            var marker = L.marker([lat, lng]).bindPopup(popup).openPopup();
-
-            markers.addLayer(marker);
-
-        }
-
-        map.addLayer(markers);
-
-}
-
- */
-
-/*
-var select = document.getElementById('selectCCAA');
-$.getJSON(apiFile, function (data) {
- for (var x in data.ListaEESSPrecio) {
-  let gasolinera = data.ListaEESSPrecio[x];
-  var opt = document.createElement('option');
-  opt.value= gasolinera['IDProvincia'];
-  opt.innerHTML= gasolinera['Provincia'];
-  select.appendChild(opt);
- }
-});
-
- */
-
-/*
-async function getApiData(url) {
-
-    const response = await fetch(url);
-
-    var apiData = await response.json();
-
-    if(response) {
-        hideloader();
-    }
-
-    generateMarkers(apiData);
-}
- */
