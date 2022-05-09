@@ -18,6 +18,7 @@ var marker;
 // 1r mapa busca exclusivamente con formularios que se recargan con las opciones elegidas. Disponer info en los marcadores
 // 2do mapa renderiza una lista con las gasolineras dentro de los bounds del mapa. Al elegir una se seleccionan sus datos
 
+
 //FORM
 var select = document.getElementById('selectCCAA');
 
