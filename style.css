@@ -1,0 +1,35 @@
+
+body {
+    background-color: antiquewhite;
+}
+
+#cuadro {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#cuadro p {
+    font-size: 1.2em;
+}
+
+#info {
+    padding: 10px;
+    font-size: 1.2em;
+}
+
+#mapContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#map {
+    border: 2px solid black;
+    width: 50%;
+    height: 600px;
+}
+
+h2 {
+    margin-left: 20px;
+}
