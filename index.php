@@ -58,7 +58,13 @@
          <button type="submit" class="btn btn-primary" name="submit">Buscar</button>
         onclick="window.location.href='index.php'" -->
     </div>
-<br>
+
+
+<div class="mb-3">
+    <label for="selectProvincia" class="form-label">Provincia</label>
+    <select name="selectProvincia" id="selectProvincia" onChange="getProvinciaValue();">
+    </select>
+</div>
 
 
 
