@@ -1,25 +1,31 @@
 var map=null;
-var provinciasPorComunidad = " https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/ProvinciasPorComunidad/";
+var provinciasPorComunidad = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/ProvinciasPorComunidad/";
+var municipiosPorProvincia = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/"
 var resultadoGeneral = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres";
 var filtroCCAA = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroCCAA/";
 var filtroProvincia = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroProvincia/";
+var filtroMunicipio = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/";
 var arrayGasolineras = [];
-var arrayListaProvincias = []
+var arrayListaProvincias = [];
+var arrayListaMunicipios = [];
 var markers  = L.markerClusterGroup();
 var marker;
-var selectCCAA = document.getElementById("selectCCAA")
+var selectCCAA = document.getElementById("selectCCAA");
 var selectProvincia = document.getElementById("selectProvincia");
+var selectMunicipio = document.getElementById("selectMunicipio");
+var tablaInfo = document.getElementById("tablaInfo");
 var zoomGeneral = false;
 var isSetFromCCAA = false;
 
 //IDEAS
 //1r mapa
 // filtrar por ccaa, provincia y localidad (secuencialmente)
-// Disponer info en los tooltip de los marcadores
-// renderizar una tabla con los precios de los últimos 7 días para la 95 y el diesel (obtener fecha actual, sumar precios de toda la ccaa para ese tipo de gasolina para 1 semana, y renderizar una tabla por dom). Hacerlo con las provincias y las localidades elegidas.
+// Disponer info básica en los tooltip de los marcadores
+// disponer el marcador seleccionado en una lista bajo el mapa con info ampliada
+// Opcional: renderizar una tabla con los precios de los últimos 7 días para la 95 y el diesel (obtener fecha actual, sumar precios de toda la ccaa para ese tipo de gasolina para 1 semana, y renderizar una tabla por dom). Hacerlo con las provincias y las localidades elegidas.
 
 // 2do mapa
-// renderiza una lista con las gasolineras dentro de los bounds del mapa. Al elegir una se seleccionan sus datos. Datos formulario: fecha, gasolinera (se elige en el mapa), tipo combustible, cantidad de dinero
+// igual que el anterior, pero además renderiza una lista con las gasolineras dentro de los bounds del mapa en ese momento. Al elegir una opción de la lista se seleccionan sus datos. Datos formulario: fecha, gasolinera (se elige en el mapa), tipo combustible, cantidad de dinero
 
 //FORM
 
@@ -73,7 +79,7 @@ async function setupMapNoGeolocalizationEnabled() {
     zoomGeneral = true;
     initMap(40.463667, -3.74922);
     await updateArrayGasolineras();
-    placeMarkers();
+
 
 }
 
@@ -91,6 +97,10 @@ function initMap(lat, lng) {
 // coloca los marcadores en el mapa
  function placeMarkers() {
 
+
+
+
+
   // cada vez que se llama la función, empieza borrando las capas existentes
   markers.clearLayers();
 
@@ -103,15 +113,31 @@ function initMap(lat, lng) {
         //popup con la información al hacer click en el marcador
         var popup = L.popup()
             .setLatLng(lat, lng)
-            .setContent(arrayGasolineras[x]['Dirección']);
+            .setContent(arrayGasolineras[x]['Rótulo'] + " - " + arrayGasolineras[x]['Dirección']);
 
-        marker = L.marker([lat, lng]).bindPopup(popup).openPopup();
+        marker = new L.Marker([lat, lng]).bindPopup(popup).openPopup().on('click', clickMarker);
 
         markers.addLayer(marker);
+
     }
+
+
+
     map.addLayer(markers);
 
 }
+
+// cuando se hace click en un marcador, se despliega la información
+function clickMarker(e) {
+
+    //bucle for in para sacar la info del innerhtml?
+
+    let td = document.createElement('td')
+    td.innerHTML="click en marcador en " + e.latlng
+    tablaInfo.appendChild(td)
+
+}
+
 
 // esconde el círculo de carga
 function hideloader() {
@@ -169,6 +195,11 @@ async function updateArrayGasolineras(){
     placeMarkers()
 
     await updateListaProvincias();
+
+    selectMunicipio.disabled = true;
+    let noFound = document.getElementById('noFound');
+    noFound.style.display = "none";
+
     console.log('Array general', arrayGasolineras)
 }
 
@@ -198,9 +229,16 @@ async function updateListaProvincias() {
 
 // consulta en endpoint con el id de provincia seleccionado y renderiza los marcadores
 async function getProvinciaValue() {
-    let optProvincia = selectProvincia.options[selectProvincia.selectedIndex].value;
+    let optProvincia = selectProvincia.options[selectProvincia.selectedIndex];
+    console.log('valor prov', optProvincia.value)
 
-    let response = await fetch(filtroProvincia+optProvincia);
+    if (optProvincia.value == -1) {
+        selectMunicipio.disabled = true;
+    } else {
+        selectMunicipio.disabled = false;
+    }
+
+    let response = await fetch(filtroProvincia+optProvincia.value);
 
     let data = await response.json();
 
@@ -210,60 +248,60 @@ async function getProvinciaValue() {
 
     placeMarkers()
 
+    let noFound = document.getElementById('noFound');
+    noFound.style.display = "none";
+
+    await updateListaMunicipios();
+
 }
 
-
-
-
-
-
-// Código sin usar endpoint de provincias
-/*
-//a partir del array general arrayGasolineras, se extraen las provincias en otro array, quitando repeticiones
-async function getProvincias(arrayGasolineras) {
-
-    arrProvincias.length = 0;
-
-    arrProvincias = arrayGasolineras.map(function(gasolinera) {
-        return {
-            'IDProvincia': gasolinera['IDProvincia'], 'Provincia': gasolinera['Provincia']
-        }
-    })
-
-    arrProvincias = [...new Map(arrProvincias.map(v => [v['IDProvincia'], v])).values()]
-    console.log('id provincias', arrProvincias)
-    return arrProvincias
-}
-
-async function generateSelectProvinciaOptions() {
-    arrProvincias = await getProvincias(arrayGasolineras)
+async function updateListaMunicipios() {
+    let opt = selectProvincia.options[selectProvincia.selectedIndex].value;
+    console.log('cod prov', opt)
+    let response = await fetch(municipiosPorProvincia+opt);
+    arrayListaMunicipios = await response.json()
+    console.log('lista munic', arrayListaMunicipios)
 
     // limpia los elementos anteriores antes de crear nuevos
-    document.getElementById("selectProvincia").innerHTML = "";
+    document.getElementById("selectMunicipio").innerHTML = "";
 
     // crea las opciones
     let inicial = document.createElement("option");
     inicial.value="-1";
-    inicial.innerHTML="Seleccione provincia...";
-    selectProvincia.appendChild(inicial);
+    inicial.innerHTML="Seleccione municipio...";
+    selectMunicipio.appendChild(inicial);
 
-    for (let x in arrProvincias) {
+    for (let x in arrayListaMunicipios) {
         let option = document.createElement('option');
-        option.value= arrProvincias[x]['IDProvincia'];
-        option.innerHTML= arrProvincias[x]['Provincia'];
-        selectProvincia.appendChild(option);
+        option.value= arrayListaMunicipios[x]['IDMunicipio'];
+        option.innerHTML= arrayListaMunicipios[x]['Municipio'];
+        selectMunicipio.appendChild(option);
     }
 
 }
 
-function getProvinciaValue() {
-    let optProvincia = selectProvincia.options[selectProvincia.selectedIndex];
-    let optCCAA = selectCCAA.options[selectCCAA.selectedIndex];
-    console.log('ccaa value2', optCCAA.value)
-    console.log("provincia value", optProvincia.value);
+async function getMunicipioValue() {
+    let optMunicipio = selectMunicipio.options[selectMunicipio.selectedIndex];
+    console.log('valor municipio', optMunicipio.value)
 
-    //con el valor de ccaa y provincia se accede al endpoint de la provincia
+    let response = await fetch(filtroMunicipio+optMunicipio.value);
+
+    let data = await response.json();
+
+    arrayGasolineras = data.ListaEESSPrecio;
+
+    let noFound = document.getElementById('noFound');
+
+    if (!arrayGasolineras.length) {
+        noFound.style.display = "block";
+    } else {
+        noFound.style.display = "none";
+    }
+
+    console.log('eess municipio', arrayGasolineras)
+
+    placeMarkers()
 
 }
 
- */
+// escoger una gasolinera (clic en el marcador) y renderizar su info bajo el mapa

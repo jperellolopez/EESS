@@ -47,6 +47,8 @@
     <div id="map"></div>
 </div>
 
+<div><table id="tablaInfo"></table></div>
+
 
     <div class="mb-3">
         <label for="selectCCAA" class="form-label">CCAA: </label>
@@ -63,9 +65,18 @@
 <div class="mb-3">
     <label for="selectProvincia" class="form-label">Provincia</label>
     <select name="selectProvincia" id="selectProvincia" onChange="getProvinciaValue();">
+        <option value="-1">Seleccione provincia...</option>
     </select>
 </div>
 
+<div class="mb-3">
+    <label for="selectMunicipio" class="form-label">Municipio</label>
+    <select name="selectMunicipio" id="selectMunicipio" onChange="getMunicipioValue();">
+        <option value="-1">Seleccione municipio...</option>
+    </select>
+</div>
+
+<div id="noFound" style="display: none"><p>No hay gasolineras en el municipio seleccionado</p></div>
 
 
 
