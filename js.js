@@ -16,6 +16,8 @@ var selectMunicipio = document.getElementById("selectMunicipio");
 var tablaInfo = document.getElementById("tablaInfo");
 var zoomGeneral = false;
 var isSetFromCCAA = false;
+var trKeys = document.createElement('tr');
+var trValues = document.createElement('tr');
 
 //IDEAS
 //1r mapa
@@ -97,10 +99,6 @@ function initMap(lat, lng) {
 // coloca los marcadores en el mapa
  function placeMarkers() {
 
-
-
-
-
   // cada vez que se llama la función, empieza borrando las capas existentes
   markers.clearLayers();
 
@@ -109,32 +107,69 @@ function initMap(lat, lng) {
         arrayGasolineras[x]['Longitud (WGS84)'] = arrayGasolineras[x]['Longitud (WGS84)'].replace(/,/g, '.');
         let lat = parseFloat(arrayGasolineras[x]['Latitud']);
         let lng = parseFloat(arrayGasolineras[x]['Longitud (WGS84)']);
+        let rotulo = arrayGasolineras[x]['Rótulo'];
+        let direccion = arrayGasolineras[x]['Dirección'] + ", " + arrayGasolineras[x]['C.P.'] + ", " + arrayGasolineras[x]['Municipio'];
+        let horario = arrayGasolineras[x]['Horario'];
+        let precio95 = arrayGasolineras[x]['Precio Gasolina 95 E5'];
+        let precioDiesel = arrayGasolineras[x]['Precio Gasoleo A'];
+        let precio98 = arrayGasolineras[x]['Precio Gasolina 98 E5'];
+        let precioDieselPlus = arrayGasolineras[x]['Precio Gasoleo Premium'];
 
         //popup con la información al hacer click en el marcador
         var popup = L.popup()
             .setLatLng(lat, lng)
-            .setContent(arrayGasolineras[x]['Rótulo'] + " - " + arrayGasolineras[x]['Dirección']);
+            .setContent( rotulo + " - " + direccion);
 
-        marker = new L.Marker([lat, lng]).bindPopup(popup).openPopup().on('click', clickMarker);
+        marker = new L.Marker(
+            [lat, lng],
+            {
+                'Rótulo': rotulo,
+                'Dirección': direccion,
+                'Precio Gasolina 95': precio95,
+                'Precio Gasolina 98': precio98,
+                'Precio Gasoil': precioDiesel,
+                'Precio Diesel +': precioDieselPlus,
+                'Horario': horario
+            }
+            ).bindPopup(popup).openPopup().on('click', clickMarker);
 
         markers.addLayer(marker);
 
     }
-
-
 
     map.addLayer(markers);
 
 }
 
 // cuando se hace click en un marcador, se despliega la información
-function clickMarker(e) {
 
-    //bucle for in para sacar la info del innerhtml?
+function clickMarker() {
 
-    let td = document.createElement('td')
-    td.innerHTML="click en marcador en " + e.latlng
-    tablaInfo.appendChild(td)
+   trKeys.innerHTML = ""
+   trValues.innerHTML = ""
+
+    for (let i = 0; i < Object.keys(this.options).length-1; i++) {
+
+        let th = document.createElement('th');
+        th.innerHTML = Object.keys(this.options)[i];
+        trKeys.appendChild(th)
+
+    }
+
+    tablaInfo.appendChild(trKeys)
+
+    for (let i = 0; i < Object.keys(this.options).length-1; i++) {
+
+        let td = document.createElement('td');
+        td.innerHTML = Object.values(this.options)[i];
+        if (td.innerHTML === "") {
+            td.innerHTML = "-";
+        }
+        trValues.appendChild(td)
+
+    }
+
+    tablaInfo.appendChild(trValues)
 
 }
 
