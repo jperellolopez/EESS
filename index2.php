@@ -50,36 +50,7 @@
 <div><table id="tablaInfo"></table></div>
 <br>
 
-    <div class="mb-3">
-        <label for="selectCCAA" class="form-label">CCAA: </label>
-        <select name="selectCCAA" id="selectCCAA" onChange="updateArrayGasolineras();">
-            <option value="-1">GENERAL</option>
-        </select>
-        <!--
-         <button type="submit" class="btn btn-primary" name="submit">Buscar</button>
-        onclick="window.location.href='index.php'" -->
-    </div>
-
-
-<div class="mb-3">
-    <label for="selectProvincia" class="form-label">Provincia</label>
-    <select name="selectProvincia" id="selectProvincia" onChange="getProvinciaValue();">
-        <option value="-1">Seleccione provincia...</option>
-    </select>
-</div>
-
-<div class="mb-3">
-    <label for="selectMunicipio" class="form-label">Municipio</label>
-    <select name="selectMunicipio" id="selectMunicipio" onChange="getMunicipioValue();">
-        <option value="-1">Seleccione municipio...</option>
-    </select>
-</div>
-
-<div id="noFound" style="display: none"><p>No hay gasolineras en el municipio seleccionado</p></div>
-
-
-
-<script type="text/javascript" src="js.js"></script>
+<script type="text/javascript" src="js2.js"></script>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

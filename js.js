@@ -142,30 +142,36 @@ function initMap(lat, lng) {
 }
 
 // cuando se hace click en un marcador, se despliega la información
-
 function clickMarker() {
 
    trKeys.innerHTML = ""
    trValues.innerHTML = ""
 
-    for (let i = 0; i < Object.keys(this.options).length-1; i++) {
+    for (let i = 0; i < Object.keys(this.options).length; i++) {
 
         let th = document.createElement('th');
-        th.innerHTML = Object.keys(this.options)[i];
-        trKeys.appendChild(th)
+        if (Object.keys(this.options)[i] !== "opacity") {
+            th.innerHTML = Object.keys(this.options)[i];
+            trKeys.appendChild(th)
+        }
 
     }
 
     tablaInfo.appendChild(trKeys)
 
-    for (let i = 0; i < Object.keys(this.options).length-1; i++) {
+    for (let i = 0; i < Object.keys(this.options).length; i++) {
 
         let td = document.createElement('td');
-        td.innerHTML = Object.values(this.options)[i];
+
+        if (Object.values(this.options)[i] !== 1) {
+            td.innerHTML = Object.values(this.options)[i];
+            trValues.appendChild(td)
+        }
+
         if (td.innerHTML === "") {
             td.innerHTML = "-";
+            trValues.appendChild(td)
         }
-        trValues.appendChild(td)
 
     }
 
@@ -338,5 +344,3 @@ async function getMunicipioValue() {
     placeMarkers()
 
 }
-
-// escoger una gasolinera (clic en el marcador) y renderizar su info bajo el mapa
