@@ -108,12 +108,14 @@ function placeMarkers() {
         let precioDiesel = arrayGasolineras[x]['Precio Gasoleo A'];
         let precio98 = arrayGasolineras[x]['Precio Gasolina 98 E5'];
         let precioDieselPlus = arrayGasolineras[x]['Precio Gasoleo Premium'];
+        let IDEESS = arrayGasolineras[x]['IDEESS'];
 
-        //popup con la información al hacer click en el marcador
+        //tooltip al poner el cursor sobre un marcador
         var popup = L.tooltip()
             .setLatLng(lat, lng)
             .setContent( rotulo + " - " + arrayGasolineras[x]['Dirección']);
 
+        // se construyen los marcadores con sus coordenadas y sus opciones
         marker = new L.Marker(
             [lat, lng],
             {
@@ -125,14 +127,53 @@ function placeMarkers() {
                 precioDieselPlus: precioDieselPlus,
                 horario: horario
             }
-            ).bindTooltip(popup).openTooltip();
+            ).bindTooltip(popup).openTooltip().on('click', colorChange)
 
+        // se añade el ID de gasolinera
+        marker.IDgasolinera = IDEESS
 
         markers.addLayer(marker);
 
     }
 
     map.addLayer(markers);
+
+}
+
+function colorChange() {
+
+    let seleccionados = document.querySelectorAll(".colorChange")
+    for (let x = 0; x < seleccionados.length; x++) {
+        seleccionados[x].classList.remove("colorChange")
+    }
+    this._icon.classList.add("colorChange")
+
+    let colorFondoFila = "green";
+    var direccionCompleta;
+
+    gasStationsWithinBounds.forEach(gasolinera => {
+        if (gasolinera.IDgasolinera === this.IDgasolinera) {
+            direccionCompleta = gasolinera.options['direccion']
+            //console.log(gasolinera)
+        }
+    })
+
+    let table = document.getElementById('tablaInfo')
+
+    let tr = table.getElementsByTagName('tr');
+
+    for (let i = 0; i<tr.length; i++) {
+        let celdas = tr[i].getElementsByTagName('td');
+
+        tr[i].removeAttribute("style");
+
+        for (let celda = 0; celda < celdas.length; celda++) {
+
+            if (celdas[celda].innerHTML === direccionCompleta) {
+                celdas[celda].parentNode.style.backgroundColor = colorFondoFila;
+            }
+        }
+    }
 
 }
 
@@ -147,13 +188,12 @@ function getMarkersInView() {
 
                 // con este condicional sólo se guardarán marcadores, no clusters
                 if (Object.keys(layer.options).length > 3) {
-                    gasStationsWithinBounds.push(layer.options)
+                    gasStationsWithinBounds.push(layer)
                 }
 
             }
         }
     });
-    console.log(gasStationsWithinBounds)
 
     tablaGasolineras()
 }
@@ -162,10 +202,9 @@ function tablaGasolineras() {
 
     let table = document.getElementById('tablaInfo')
 
-    table.innerHTML=""
+    table.innerHTML="";
 
     let encabezados = ['Rótulo', 'Dirección', 'Precio Gasolina 95', 'Precio Gasolina 98', 'Precio Gasoil', 'Precio Diésel +', 'Horario'];
-
 
     let headerRow = document.createElement('tr')
 
@@ -182,10 +221,13 @@ function tablaGasolineras() {
     table.appendChild(headerRow);
 
     gasStationsWithinBounds.forEach(gasolinera => {
+
         let row = document.createElement('tr');
 
-        Object.values(gasolinera).forEach(texto => {
+        Object.values(gasolinera.options).forEach(texto => {
+
             if (texto !== 1) {
+
                 let cell = document.createElement('td');
 
                 if (texto === "") {
@@ -197,21 +239,31 @@ function tablaGasolineras() {
                 let textNode = document.createTextNode(texto);
                 cell.appendChild(textNode);
                 row.appendChild(cell);
+
             }
 
         })
-        table.appendChild(row);
+
+    table.appendChild(row);
+
     })
 
 }
 
-// hacer tabla de js1 al mismo estilo que esta
+// mostrar marcador con ubicacion actual y distancia hasta la gasolinera?
 // hacer que arrayGasolineras se llene consultando el endpoint de fecha ( por defecto la actual, pero cambiará al enviar form para enviar la fecha al endpoint)
-// añadir la propiedad IDEESS a los marcadores como compo oculto (visibility)
 // al hacer clic en un boton enviar el IDEESS a arrayGasolineras, obtener los datos de ese objeto
 // seguir pidiendo datos (tipo de combustible y dinero)
 // enviar lo anterior a php para guardar en bd
 
+/*
+//para enviar info a la bd
+    for (let i in arrayGasolineras) {
+    if (arrayGasolineras[i]['IDEESS'] === this.IDgasolinera) {
+        console.log(arrayGasolineras[i])
+    }
+}
+ */
 
 
 // esconde el círculo de carga una vez han cargado los marcadores
@@ -219,6 +271,7 @@ function hideloader() {
     document.getElementById('loading').style.display = 'none';
 }
 
+// devuelve un array de objetos gasolinera procedentes de la API
  async function getAPI() {
 
     let response = await fetch(resultadoGeneral)

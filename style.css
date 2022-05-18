@@ -37,3 +37,7 @@ h2 {
 th, tr, td {
     border: 1px solid black;
 }
+
+img.colorChange {
+    filter: hue-rotate(240deg);
+}

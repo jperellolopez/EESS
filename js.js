@@ -13,11 +13,8 @@ var marker;
 var selectCCAA = document.getElementById("selectCCAA");
 var selectProvincia = document.getElementById("selectProvincia");
 var selectMunicipio = document.getElementById("selectMunicipio");
-var tablaInfo = document.getElementById("tablaInfo");
 var zoomGeneral = false;
 var isSetFromCCAA = false;
-var trKeys = document.createElement('tr');
-var trValues = document.createElement('tr');
 
 //IDEAS
 //1r mapa
@@ -116,22 +113,23 @@ function initMap(lat, lng) {
         let precioDieselPlus = arrayGasolineras[x]['Precio Gasoleo Premium'];
 
         //popup con la información al hacer click en el marcador
-        var popup = L.popup()
+        var popup = L.tooltip()
             .setLatLng(lat, lng)
             .setContent( rotulo + " - " + direccion);
 
         marker = new L.Marker(
             [lat, lng],
             {
-                'Rótulo': rotulo,
-                'Dirección': direccion,
-                'Precio Gasolina 95': precio95,
-                'Precio Gasolina 98': precio98,
-                'Precio Gasoil': precioDiesel,
-                'Precio Diesel +': precioDieselPlus,
-                'Horario': horario
+                rotulo: rotulo,
+                direccion: direccion,
+                precioGasolina95: precio95,
+                precioGasolina98: precio98,
+                precioGasoil: precioDiesel,
+                precioDieselPlus: precioDieselPlus,
+                horario: horario
+
             }
-            ).bindPopup(popup).openPopup().on('click', clickMarker);
+            ).bindTooltip(popup).openTooltip().on('click', clickMarker)
 
         markers.addLayer(marker);
 
@@ -141,41 +139,58 @@ function initMap(lat, lng) {
 
 }
 
+// elimina el color de los marcadores para poder cambiarlo luego
+function eliminaColorMarcadores() {
+    let seleccionados = document.querySelectorAll(".colorChange")
+    for (let x = 0; x < seleccionados.length; x++) {
+        seleccionados[x].classList.remove("colorChange")
+    }
+}
+
 // cuando se hace click en un marcador, se despliega la información
 function clickMarker() {
 
-   trKeys.innerHTML = ""
-   trValues.innerHTML = ""
+    eliminaColorMarcadores()
+    this._icon.classList.add("colorChange")
+
+    let tablaInfo = document.getElementById("tablaInfo");
+
+    tablaInfo.innerHTML = "";
+
+    let encabezados = ['Rótulo', 'Dirección', 'Precio Gasolina 95', 'Precio Gasolina 98', 'Precio Gasoil', 'Precio Diésel +', 'Horario'];
+
+    let headerRow = document.createElement('tr');
+    let row = document.createElement('tr');
+
+    encabezados.forEach(texto => {
+            let header = document.createElement('th');
+            let textNode = document.createTextNode(texto);
+            header.appendChild(textNode);
+            headerRow.appendChild(header);
+    });
+
+    tablaInfo.appendChild(headerRow);
 
     for (let i = 0; i < Object.keys(this.options).length; i++) {
 
-        let th = document.createElement('th');
-        if (Object.keys(this.options)[i] !== "opacity") {
-            th.innerHTML = Object.keys(this.options)[i];
-            trKeys.appendChild(th)
+        //propiedades/opciones que no va a tener en cuenta: opacity e icon
+        if (Object.keys(this.options)[i] !== 'opacity' && Object.keys(this.options)[i] !== 'icon') {
+            let cell = document.createElement('td');
+
+            if (Object.values(this.options)[i] === "") {
+                let textNode = document.createTextNode("-");
+                cell.appendChild(textNode);
+                row.appendChild(cell);
+            }
+
+            let textNode = document.createTextNode(Object.values(this.options)[i]);
+            cell.appendChild(textNode);
+            row.appendChild(cell);
         }
 
     }
 
-    tablaInfo.appendChild(trKeys)
-
-    for (let i = 0; i < Object.keys(this.options).length; i++) {
-
-        let td = document.createElement('td');
-
-        if (Object.values(this.options)[i] !== 1) {
-            td.innerHTML = Object.values(this.options)[i];
-            trValues.appendChild(td)
-        }
-
-        if (td.innerHTML === "") {
-            td.innerHTML = "-";
-            trValues.appendChild(td)
-        }
-
-    }
-
-    tablaInfo.appendChild(trValues)
+    tablaInfo.appendChild(row)
 
 }
 
@@ -231,6 +246,9 @@ function hideloader() {
 // se ejecuta cada vez que se elige una opción en el dropdown para llenar el array con las gasolineras de esa CCAA
 async function updateArrayGasolineras(){
 
+    let tablaInfo = document.getElementById("tablaInfo");
+    tablaInfo.innerHTML = "";
+
     arrayGasolineras = await getAPI();
     hideloader()
     placeMarkers()
@@ -270,6 +288,8 @@ async function updateListaProvincias() {
 
 // consulta en endpoint con el id de provincia seleccionado y renderiza los marcadores
 async function getProvinciaValue() {
+    let tablaInfo = document.getElementById("tablaInfo");
+    tablaInfo.innerHTML = "";
     let optProvincia = selectProvincia.options[selectProvincia.selectedIndex];
     console.log('valor prov', optProvincia.value)
 
@@ -322,6 +342,8 @@ async function updateListaMunicipios() {
 }
 
 async function getMunicipioValue() {
+    let tablaInfo = document.getElementById("tablaInfo");
+    tablaInfo.innerHTML = "";
     let optMunicipio = selectMunicipio.options[selectMunicipio.selectedIndex];
     console.log('valor municipio', optMunicipio.value)
 
