@@ -18,13 +18,12 @@ var isSetFromCCAA = false;
 
 //IDEAS
 //1r mapa
-// filtrar por ccaa, provincia y localidad (secuencialmente)
-// Disponer info básica en los tooltip de los marcadores
-// disponer el marcador seleccionado en una lista bajo el mapa con info ampliada
 // Opcional: renderizar una tabla con los precios de los últimos 7 días para la 95 y el diesel (obtener fecha actual, sumar precios de toda la ccaa para ese tipo de gasolina para 1 semana, y renderizar una tabla por dom). Hacerlo con las provincias y las localidades elegidas.
+// Opcional: mostrar distancia hasta el marcador en la tabla
+// Opcional: buscador de municipios
 
 // 2do mapa
-// igual que el anterior, pero además renderiza una lista con las gasolineras dentro de los bounds del mapa en ese momento. Al elegir una opción de la lista se seleccionan sus datos. Datos formulario: fecha, gasolinera (se elige en el mapa), tipo combustible, cantidad de dinero
+// Datos a enviar a BBDD por formulario: fecha, gasolinera (se elige en el mapa), tipo combustible, cantidad de dinero
 
 //FORM
 
@@ -51,6 +50,7 @@ function locate() {
 async function setupMap(posicion) {
     initMap(posicion.coords.latitude, posicion.coords.longitude);
      await updateArrayGasolineras();
+
 
 }
 
@@ -271,12 +271,6 @@ async function updateListaProvincias() {
     // limpia los elementos anteriores antes de crear nuevos
     document.getElementById("selectProvincia").innerHTML = "";
 
-    // crea las opciones
-    let inicial = document.createElement("option");
-    inicial.value="-1";
-    inicial.innerHTML="Seleccione provincia...";
-    selectProvincia.appendChild(inicial);
-
     for (let x in arrayListaProvincias) {
         let option = document.createElement('option');
         option.value= arrayListaProvincias[x]['IDPovincia']; // Alerta: en el json aparece como "Povincia"
@@ -327,10 +321,12 @@ async function updateListaMunicipios() {
     document.getElementById("selectMunicipio").innerHTML = "";
 
     // crea las opciones
+    /*
     let inicial = document.createElement("option");
     inicial.value="-1";
     inicial.innerHTML="Seleccione municipio...";
     selectMunicipio.appendChild(inicial);
+     */
 
     for (let x in arrayListaMunicipios) {
         let option = document.createElement('option');
@@ -347,7 +343,7 @@ async function getMunicipioValue() {
     let optMunicipio = selectMunicipio.options[selectMunicipio.selectedIndex];
     console.log('valor municipio', optMunicipio.value)
 
-    let response = await fetch(filtroMunicipio+optMunicipio.value);
+   let response = await fetch(filtroMunicipio+optMunicipio.value);
 
     let data = await response.json();
 
@@ -364,5 +360,4 @@ async function getMunicipioValue() {
     console.log('eess municipio', arrayGasolineras)
 
     placeMarkers()
-
 }

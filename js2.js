@@ -6,18 +6,6 @@ var markers  = L.markerClusterGroup();
 var marker;
 var zoomGeneral = false;
 
-
-
-//IDEAS
-//1r mapa
-// filtrar por ccaa, provincia y localidad (secuencialmente)
-// Disponer info básica en los tooltip de los marcadores
-// disponer el marcador seleccionado en una lista bajo el mapa con info ampliada
-// Opcional: renderizar una tabla con los precios de los últimos 7 días para la 95 y el diesel (obtener fecha actual, sumar precios de toda la ccaa para ese tipo de gasolina para 1 semana, y renderizar una tabla por dom). Hacerlo con las provincias y las localidades elegidas.
-
-// 2do mapa
-// igual que el anterior, pero además renderiza una lista con las gasolineras dentro de los bounds del mapa en ese momento. Al elegir una opción de la lista se seleccionan sus datos. Datos formulario: fecha, gasolinera (se elige en el mapa), tipo combustible, cantidad de dinero
-
 //MAPA
 // funcion onload en index.php
 function locate() {
@@ -110,8 +98,15 @@ function placeMarkers() {
         let precioDieselPlus = arrayGasolineras[x]['Precio Gasoleo Premium'];
         let IDEESS = arrayGasolineras[x]['IDEESS'];
 
+        var popup = L.popup({
+            closeButton:false,
+            autoPan:false
+        })
+            .setLatLng(lat, lng)
+            .setContent('<button type="button" class="btn btn-success btn-sm" onclick="mostrar(' + IDEESS + ')" ' + '>Seleccionar<br>gasolinera</button>');
+
         //tooltip al poner el cursor sobre un marcador
-        var popup = L.tooltip()
+        var tooltip = L.tooltip()
             .setLatLng(lat, lng)
             .setContent( rotulo + " - " + arrayGasolineras[x]['Dirección']);
 
@@ -127,7 +122,7 @@ function placeMarkers() {
                 precioDieselPlus: precioDieselPlus,
                 horario: horario
             }
-            ).bindTooltip(popup).openTooltip().on('click', colorChange)
+            ).bindPopup(popup).bindTooltip(tooltip).openTooltip().on('click', colorChange)
 
         // se añade el ID de gasolinera
         marker.IDgasolinera = IDEESS
@@ -137,6 +132,24 @@ function placeMarkers() {
     }
 
     map.addLayer(markers);
+
+}
+
+function mostrar(ideess) {
+
+    let objGasolineraSeleccionado;
+
+    for (let i in arrayGasolineras) {
+        if (Number(arrayGasolineras[i]['IDEESS']) === ideess) {
+            objGasolineraSeleccionado = arrayGasolineras[i];
+            console.log(objGasolineraSeleccionado)
+        }
+    }
+
+    // hacer que al ejecutar esta función se habiliten los inputs de precio y tipo de gasolina
+// coger los datos que interesa guardar del objeto y meterlos en un array con return
+
+
 
 }
 
@@ -150,6 +163,7 @@ function colorChange() {
 
     let colorFondoFila = "green";
     var direccionCompleta;
+
 
     gasStationsWithinBounds.forEach(gasolinera => {
         if (gasolinera.IDgasolinera === this.IDgasolinera) {
@@ -250,20 +264,11 @@ function tablaGasolineras() {
 
 }
 
-// mostrar marcador con ubicacion actual y distancia hasta la gasolinera?
 // hacer que arrayGasolineras se llene consultando el endpoint de fecha ( por defecto la actual, pero cambiará al enviar form para enviar la fecha al endpoint)
-// al hacer clic en un boton enviar el IDEESS a arrayGasolineras, obtener los datos de ese objeto
+// al hacer clic en un boton enviar el IDEESS a arrayGasolineras, obtener los datos de ese objeto (o al hacer click en un marcador, abrir botón en el popup)
 // seguir pidiendo datos (tipo de combustible y dinero)
 // enviar lo anterior a php para guardar en bd
 
-/*
-//para enviar info a la bd
-    for (let i in arrayGasolineras) {
-    if (arrayGasolineras[i]['IDEESS'] === this.IDgasolinera) {
-        console.log(arrayGasolineras[i])
-    }
-}
- */
 
 
 // esconde el círculo de carga una vez han cargado los marcadores
