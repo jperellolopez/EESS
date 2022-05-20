@@ -50,6 +50,35 @@
 <div><table id="tablaInfo"></table></div>
 <br>
 
+<div id="gasStationForm">
+    <form>
+        <div>
+        <input  id="combustible1" class="radioOption" type="radio" name="tipoGasolina" value="Gasolina 95">
+        <label class="labelCombustible" for="combustible1">Gasolina 95</label>
+
+        <input  id="combustible2" class="radioOption" type="radio" name="tipoGasolina" value="Gasolina 98">
+        <label  class="labelCombustible" for="combustible2">Gasolina 98</label>
+
+        <input  id="combustible3" class="radioOption" type="radio" name="tipoGasolina" value="Diesel">
+        <label  class="labelCombustible" for="combustible3">Diésel</label>
+
+        <input  id="combustible4" class="radioOption" type="radio" name="tipoGasolina" value="Diesel Plus">
+        <label  class="labelCombustible" for="combustible4">Diésel +</label>
+        </div>
+        <br>
+        <div>
+            <input id="cantidad" type="text"  name="cantidad" required>
+            <label for="cantidad">Cantidad repostada</label>
+        </div>
+        <br>
+        <div>
+            <button id="submitBtn" type="button" onclick="enviarDatos()">Generar ticket</button>
+        </div>
+    </form>
+</div>
+
+<p id="message"></p>
+
 <script type="text/javascript" src="js2.js"></script>
 
 <!-- Bootstrap JS -->

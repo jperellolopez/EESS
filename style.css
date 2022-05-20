@@ -41,3 +41,7 @@ th, tr, td {
 img.colorChange {
     filter: hue-rotate(240deg);
 }
+
+#gasStationForm {
+    display: none;
+}

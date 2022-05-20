@@ -5,6 +5,7 @@ var gasStationsWithinBounds = [];
 var markers  = L.markerClusterGroup();
 var marker;
 var zoomGeneral = false;
+var objGasolineraSeleccionado;
 
 //MAPA
 // funcion onload en index.php
@@ -103,7 +104,7 @@ function placeMarkers() {
             autoPan:false
         })
             .setLatLng(lat, lng)
-            .setContent('<button type="button" class="btn btn-success btn-sm" onclick="mostrar(' + IDEESS + ')" ' + '>Seleccionar<br>gasolinera</button>');
+            .setContent('<button type="button" class="btn btn-success btn-sm" onclick="getGasStationData(' + IDEESS + ')" ' + '>Seleccionar<br>gasolinera</button>');
 
         //tooltip al poner el cursor sobre un marcador
         var tooltip = L.tooltip()
@@ -135,22 +136,85 @@ function placeMarkers() {
 
 }
 
-function mostrar(ideess) {
+function getGasStationData(ideess) {
+    // muestra el resto de opciones y las limpia
+    document.getElementById('gasStationForm').style.display="inline";
+    document.getElementById('cantidad').value = "";
+    let radioElements = document.getElementsByClassName('radioOption');
+    for (let x = 0; x < radioElements.length; x++) {
+        radioElements[x].checked = false;
+    }
 
-    let objGasolineraSeleccionado;
-
+    // se obtiene el objeto correspondiente a la gasolinera seleccionada en el mapa
     for (let i in arrayGasolineras) {
         if (Number(arrayGasolineras[i]['IDEESS']) === ideess) {
             objGasolineraSeleccionado = arrayGasolineras[i];
-            console.log(objGasolineraSeleccionado)
         }
     }
 
-    // hacer que al ejecutar esta función se habiliten los inputs de precio y tipo de gasolina
-// coger los datos que interesa guardar del objeto y meterlos en un array con return
+    // se comprueban los valores de los 4 tipos de combustible, si alguno de ellos es "" se oculta el input
+    let labelRadioElements = document.getElementsByClassName('labelCombustible');
+    let tiposCombustible = ['Precio Gasolina 95 E5', 'Precio Gasolina 98 E5', 'Precio Gasoleo A', 'Precio Gasoleo Premium']
 
+    for (let j = 0; j < tiposCombustible.length; j++) {
 
+            if (objGasolineraSeleccionado[tiposCombustible[j]] !== "") {
+                radioElements[j].style.display="inline";
+                labelRadioElements[j].style.display="inline";
+            } else {
+                radioElements[j].style.display="none";
+                labelRadioElements[j].style.display="none";
+            }
+    }
 
+}
+
+function enviarDatos() {
+    //oculta el formulario cuando se clica en el botón de enviar
+    let formID = document.getElementById('gasStationForm');
+    formID.style.display="none";
+
+    //obtener los datos puestos y añadirlos al objeto, despues enviarlo
+    let radioSelected;
+    let radioOptions = document.getElementsByClassName('radioOption');
+
+    for (let i = 0; i < radioOptions.length; i++) {
+        if (radioOptions[i].checked) {
+            radioSelected = radioOptions[i].value;
+        }
+    }
+
+    let amountSelected = document.getElementById('cantidad').value;
+
+    // validar campos
+    if (radioSelected !== undefined && amountSelected !== "") {
+
+        // incorpora al objeto gasolinera los datos del formulario
+        let c = {
+            Combustible: radioSelected,
+            Cantidad: amountSelected
+        }
+
+        let datos = Object.assign(objGasolineraSeleccionado, c);
+
+        sendToServer(datos);
+        alert("Factura creada con éxito")
+
+    } else {
+        alert("Faltan campos por completar")
+    }
+}
+
+function sendToServer(data) {
+    let XHR = new XMLHttpRequest();
+    let FD  = new FormData();
+    let url = 'http://localhost/openstreetmap/api.php';
+
+    for(let key in data) {
+        FD.append(key, data[key]);
+    }
+    XHR.open('POST', url);
+    XHR.send(FD);
 }
 
 function colorChange() {
@@ -164,11 +228,9 @@ function colorChange() {
     let colorFondoFila = "green";
     var direccionCompleta;
 
-
     gasStationsWithinBounds.forEach(gasolinera => {
         if (gasolinera.IDgasolinera === this.IDgasolinera) {
             direccionCompleta = gasolinera.options['direccion']
-            //console.log(gasolinera)
         }
     })
 
@@ -188,7 +250,6 @@ function colorChange() {
             }
         }
     }
-
 }
 
 // almacena en un array los marcadores que están dentro de los límites actuales del mapa. No incluye los que están dentro de un cluster para no generar listas enormes
@@ -265,9 +326,8 @@ function tablaGasolineras() {
 }
 
 // hacer que arrayGasolineras se llene consultando el endpoint de fecha ( por defecto la actual, pero cambiará al enviar form para enviar la fecha al endpoint)
-// al hacer clic en un boton enviar el IDEESS a arrayGasolineras, obtener los datos de ese objeto (o al hacer click en un marcador, abrir botón en el popup)
-// seguir pidiendo datos (tipo de combustible y dinero)
-// enviar lo anterior a php para guardar en bd
+// en la tabla facturas quitar fecha edicion y poner fecha de consulta
+// en los campos del form hay que evitar num negativos
 
 
 
