@@ -1,11 +1,14 @@
 var map=null;
 var resultadoGeneral = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres";
+var resultadoAnterior = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestresHist/";
+var inputFecha;
 var arrayGasolineras = [];
 var gasStationsWithinBounds = [];
 var markers  = L.markerClusterGroup();
 var marker;
 var zoomGeneral = false;
 var objGasolineraSeleccionado;
+var fechaCambiada = false;
 
 //MAPA
 // funcion onload en index.php
@@ -18,9 +21,9 @@ function locate() {
 // si la geolocalización está permitida, inicia el mapa, llena el array de gasolineras y coloca los marcadores en el mapa
 async function setupMap(posicion) {
     initMap(posicion.coords.latitude, posicion.coords.longitude);
+
      arrayGasolineras = await getAPI();
      placeMarkers();
-
     // obtiene un array con los marcadores en los límites del mapa al cargarlo
      map.whenReady(function() {
          getMarkersInView()
@@ -78,6 +81,7 @@ function initMap(lat, lng) {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
+
 }
 
 // coloca los marcadores en el mapa
@@ -172,7 +176,9 @@ function getGasStationData(ideess) {
 function enviarDatos() {
     //oculta el formulario cuando se clica en el botón de enviar
     let formID = document.getElementById('gasStationForm');
-    formID.style.display="none";
+
+
+    let inputFecha = document.getElementById('fecha').value
 
     //obtener los datos puestos y añadirlos al objeto, despues enviarlo
     let radioSelected;
@@ -187,21 +193,23 @@ function enviarDatos() {
     let amountSelected = document.getElementById('cantidad').value;
 
     // validar campos
-    if (radioSelected !== undefined && amountSelected !== "") {
+    if (radioSelected !== undefined && amountSelected !== "" && !isNaN(amountSelected) && amountSelected > 0) {
 
         // incorpora al objeto gasolinera los datos del formulario
         let c = {
-            Combustible: radioSelected,
-            Cantidad: amountSelected
+            Combustible_Repostado: radioSelected,
+            Cantidad_Repostada: amountSelected,
+            Fecha_Repostaje: inputFecha
         }
 
         let datos = Object.assign(objGasolineraSeleccionado, c);
 
         sendToServer(datos);
         alert("Factura creada con éxito")
+        formID.style.display="none";
 
     } else {
-        alert("Faltan campos por completar")
+        alert("Faltan campos por completar o los datos no son correctos")
     }
 }
 
@@ -325,26 +333,71 @@ function tablaGasolineras() {
 
 }
 
-// hacer que arrayGasolineras se llene consultando el endpoint de fecha ( por defecto la actual, pero cambiará al enviar form para enviar la fecha al endpoint)
-// en la tabla facturas quitar fecha edicion y poner fecha de consulta
-// en los campos del form hay que evitar num negativos
+// al enviar la fecha, la verifica, la envía a un u otro endpoint y la convierte en un formato admitido por la API
+ async function cambiarFecha() {
 
+inputFecha =  document.getElementById('fecha').value
 
+     // convierte las fechas mínima, máxima y enviada a ms y las compara, por si se introducen las fechas con el teclado en lugar de usar el datepicker
+     let submittedTime = new Date(inputFecha).getTime();
+     let minAttr = document.getElementById('fecha').min;
+     let minDate = new Date(minAttr).getTime()
+     let maxAttr = document.getElementById('fecha').max;
+     let maxDate = new Date(maxAttr).getTime()
+
+     if (submittedTime < minDate || submittedTime > maxDate) {
+         alert('fecha no válida')
+         return
+     }
+
+     if (convertDate(inputFecha) !== convertDate(new Date())) {
+         fechaCambiada = true;
+     } else {
+         fechaCambiada = false;
+     }
+
+inputFecha = (convertDate(inputFecha));
+map.off();
+map.remove();
+locate()
+}
+
+// convierte la fecha en un formato admitido en el endpoint (mm/dd/aaaa -> dd-mm-aaaa)
+function convertDate(inputFormat) {
+    function pad(s) { return (s < 10) ? '0' + s : s; }
+    var d = new Date(inputFormat)
+    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('-')
+}
 
 // esconde el círculo de carga una vez han cargado los marcadores
 function hideloader() {
+    document.getElementById('loading').style.display = 'block';
     document.getElementById('loading').style.display = 'none';
 }
 
 // devuelve un array de objetos gasolinera procedentes de la API
  async function getAPI() {
 
-    let response = await fetch(resultadoGeneral)
+    let response;
+
+    if (!fechaCambiada) {
+        response =  await fetch(resultadoGeneral)
+    } else {
+        response = await  fetch(resultadoAnterior + inputFecha)
+    }
 
     let data = await response.json()
      hideloader()
+
+    let fechaCompleta = data.Fecha;
+    let fecha = fechaCompleta.split(' ')[0];
+
+     let infoFecha = document.getElementById('infoFecha');
+     infoFecha.innerHTML="Mostrando datos de " + fecha + " - ";
 
      return data.ListaEESSPrecio
 
     }
 
+// en la tabla facturas quitar fecha edicion (los tickets no se editarán) y poner fecha de repostaje
+// en los campos del form hay que evitar num negativos o no numeros

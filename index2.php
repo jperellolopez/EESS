@@ -42,12 +42,23 @@
 </div>
 <br>
 
+
 <div id="mapContainer">
     <h2>Mapa de gasolineras</h2>
+    <br>
     <div id="map"></div>
 </div>
 <br>
-<div><table id="tablaInfo"></table></div>
+<div>
+    <div id="divFecha" >
+    <span id="infoFecha"></span>
+        <label for="fecha" id="labelFecha"> Cambiar fecha: </label>
+        <input type="date"  min="<?php  echo date("Y-m-d", strtotime("-1 months", strtotime(date("Y-m-d")."-01"))); ?>" max="<?php  echo date("Y-m-d"); ?>" value="<?php echo date("Y-m-d"); ?>" id="fecha">
+        <input type="button" value="Elegir" onclick="cambiarFecha()">
+    <br>
+    </div>
+    <table id="tablaInfo"></table></div>
+
 <br>
 
 <div id="gasStationForm">
@@ -67,8 +78,8 @@
         </div>
         <br>
         <div>
-            <input id="cantidad" type="text"  name="cantidad" required>
             <label for="cantidad">Cantidad repostada</label>
+            <input id="cantidad" type="text"  name="cantidad" required>
         </div>
         <br>
         <div>

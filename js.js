@@ -18,14 +18,10 @@ var isSetFromCCAA = false;
 
 //IDEAS
 //1r mapa
-// Opcional: renderizar una tabla con los precios de los últimos 7 días para la 95 y el diesel (obtener fecha actual, sumar precios de toda la ccaa para ese tipo de gasolina para 1 semana, y renderizar una tabla por dom). Hacerlo con las provincias y las localidades elegidas.
+// Opcional: renderizar una tabla con los precios de los últimos 7 días para la 95 y el diesel (obtener fecha actual, sumar los precios, buscar cuantas gasolineras tienen como propiedad el combustible elegido y sumarlas, dividir lo anterior y renderizar una tabla por dom). Hacerlo con las provincias y las localidades elegidas.
 // Opcional: mostrar distancia hasta el marcador en la tabla
-// Opcional: buscador de municipios
+// Opcional: cuando la pantalla se hace pequeña, quitar el mapa y renderizar una lista de todas las gasolineras del municipio seleccionado
 
-// 2do mapa
-// Datos a enviar a BBDD por formulario: fecha, gasolinera (se elige en el mapa), tipo combustible, cantidad de dinero
-
-//FORM
 
 // no se ha utilizado el endpoint "Listados/ComunidadesAutonomas" porque no proporciona coordenadas, las cuales son imprescindibles para ir moviendo el mapa cuando se selecciona una CCAA
 var arrayListaCCAA = [ {'IDCCAA': 1, 'Nombre': 'ANDALUCÍA', 'Lat': '37.6000000', 'Lng': '-4.5000000'}, {'IDCCAA':2, 'Nombre':  'ARAGÓN', 'Lat': '41.5000000', 'Lng': '-0.6666700'}, {'IDCCAA':3, 'Nombre':  'ASTURIAS', 'Lat': '43.3666200', 'Lng': '-5.8611200'}, {'IDCCAA':4, 'Nombre':  'BALEARES', 'Lat': '39.6099200', 'Lng': '3.0294800'}, {'IDCCAA':5, 'Nombre':  'CANARIAS', 'Lat': '28.0000000', 'Lng': '-15.5000000'}, {'IDCCAA':6, 'Nombre':  'CANTABRIA', 'Lat': '43.2000000', 'Lng': '-4.0333300'}, {'IDCCAA':7, 'Nombre':  'CASTILLA LA MANCHA', 'Lat': '39.8581', 'Lng': '-4.02263'}, {'IDCCAA':8, 'Nombre':  'CASTILLA Y LEÓN', 'Lat': '42.60003', 'Lng': '-5.57032'}, {'IDCCAA':9, 'Nombre':  'CATALUÑA', 'Lat': '41.8204600', 'Lng': '1.8676800'}, {'IDCCAA':10, 'Nombre':  'COMUNIDAD VALENCIANA', 'Lat': '39.5000000', 'Lng': '-0.7500000'}, {'IDCCAA':11, 'Nombre':  'EXTREMADURA', 'Lat': '39.1666700', 'Lng': '-6.1666700'}, {'IDCCAA':12, 'Nombre':  'GALICIA', 'Lat': '42.7550800', 'Lng': '-7.8662100'}, {'IDCCAA':13, 'Nombre':  'MADRID', 'Lat': '40.4165000', 'Lng': '-3.7025600'}, {'IDCCAA':14, 'Nombre':  'MURCIA', 'Lat': '37.9870400', 'Lng': '-1.1300400'}, {'IDCCAA':15, 'Nombre':  'NAVARRA', 'Lat': '42.8233000', 'Lng': '-1.6513800'}, {'IDCCAA':16, 'Nombre':  'PAÍS VASCO', 'Lat': ' 43.0000000', 'Lng': '-2.7500000'}, {'IDCCAA':17, 'Nombre':  'RIOJA (LA)', 'Lat': '42.3000000', 'Lng': '-2.5000000'}, {'IDCCAA':18, 'Nombre':  'CEUTA', 'Lat': '35.8902800', 'Lng': '-5.3075000'}, {'IDCCAA':19, 'Nombre':  'MELILLA', 'Lat': '35.2936900', 'Lng': '-2.9383300'}];
@@ -50,8 +46,6 @@ function locate() {
 async function setupMap(posicion) {
     initMap(posicion.coords.latitude, posicion.coords.longitude);
      await updateArrayGasolineras();
-
-
 }
 
 // error popup alerts
@@ -73,30 +67,26 @@ function showError(error) {
     }
 }
 
-// si la geolocalización no está permitida, la posicion se centra en todo el país
+// si la geolocalización no está permitida, el zoom es general
 async function setupMapNoGeolocalizationEnabled() {
     zoomGeneral = true;
     initMap(40.463667, -3.74922);
     await updateArrayGasolineras();
-
-
 }
 
 //inicialización del mapa
 function initMap(lat, lng) {
     let zoom = (!zoomGeneral ? 14 : 5);
-
     map = new L.map('map').setView([lat, lng], zoom, {preferCanvas: true});
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-
 }
 
 // coloca los marcadores en el mapa
  function placeMarkers() {
 
-  // cada vez que se llama la función, empieza borrando las capas existentes
+// cada vez que se llama la función, empieza borrando las capas existentes
   markers.clearLayers();
 
     for (let x in arrayGasolineras) {
@@ -112,8 +102,8 @@ function initMap(lat, lng) {
         let precio98 = arrayGasolineras[x]['Precio Gasolina 98 E5'];
         let precioDieselPlus = arrayGasolineras[x]['Precio Gasoleo Premium'];
 
-        //popup con la información al hacer click en el marcador
-        var popup = L.tooltip()
+        //tooltip con la información al hacer hover en el marcador
+        var tooltip = L.tooltip()
             .setLatLng(lat, lng)
             .setContent( rotulo + " - " + direccion);
 
@@ -129,7 +119,7 @@ function initMap(lat, lng) {
                 horario: horario
 
             }
-            ).bindTooltip(popup).openTooltip().on('click', clickMarker)
+            ).bindTooltip(tooltip).openTooltip().on('click', clickMarker)
 
         markers.addLayer(marker);
 
@@ -152,9 +142,7 @@ function clickMarker() {
 
     eliminaColorMarcadores()
     this._icon.classList.add("colorChange")
-
     let tablaInfo = document.getElementById("tablaInfo");
-
     tablaInfo.innerHTML = "";
 
     let encabezados = ['Rótulo', 'Dirección', 'Precio Gasolina 95', 'Precio Gasolina 98', 'Precio Gasoil', 'Precio Diésel +', 'Horario'];
@@ -173,7 +161,7 @@ function clickMarker() {
 
     for (let i = 0; i < Object.keys(this.options).length; i++) {
 
-        //propiedades/opciones que no va a tener en cuenta: opacity e icon
+        //propiedades/opciones que no va a tener en cuenta porque no queremos ver en la lista: opacity e icon
         if (Object.keys(this.options)[i] !== 'opacity' && Object.keys(this.options)[i] !== 'icon') {
             let cell = document.createElement('td');
 
@@ -194,12 +182,12 @@ function clickMarker() {
 
 }
 
-
 // esconde el círculo de carga
 function hideloader() {
     document.getElementById('loading').style.display = 'none';
 }
 
+// consulta a la API para obtener un array de objetos gasolinera
  async function getAPI() {
 
      // formateo de los números de ccaa menores a 10 para incluirlos en el endpoint
