@@ -2,7 +2,7 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="bc35fad4-c605-4c26-8bdb-b566d434a45e" name="localhost" url="http://localhost/openstreetmap">
+      <webServer id="bc35fad4-c605-4c26-8bdb-b566d434a45e" name="localhost" url="http://localhost/EESS">
         <fileTransfer mountedRoot="C:\xampp\htdocs" accessType="MOUNT" port="0" />
       </webServer>
     </option>

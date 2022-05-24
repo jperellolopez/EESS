@@ -9,6 +9,7 @@ var marker;
 var zoomGeneral = false;
 var objGasolineraSeleccionado;
 var fechaCambiada = false;
+var url = 'http://localhost/EESS/api.php';
 
 //MAPA
 // funcion onload en index.php
@@ -178,7 +179,7 @@ function enviarDatos() {
     let formID = document.getElementById('gasStationForm');
 
 
-    let inputFecha = document.getElementById('fecha').value
+    let inputFecha = document.getElementById('fecha')
 
     //obtener los datos puestos y añadirlos al objeto, despues enviarlo
     let radioSelected;
@@ -199,7 +200,7 @@ function enviarDatos() {
         let c = {
             Combustible_Repostado: radioSelected,
             Cantidad_Repostada: amountSelected,
-            Fecha_Repostaje: inputFecha
+            Fecha_Repostaje: inputFecha.value
         }
 
         let datos = Object.assign(objGasolineraSeleccionado, c);
@@ -210,13 +211,13 @@ function enviarDatos() {
 
     } else {
         alert("Faltan campos por completar o los datos no son correctos")
+
     }
 }
 
 function sendToServer(data) {
     let XHR = new XMLHttpRequest();
     let FD  = new FormData();
-    let url = 'http://localhost/openstreetmap/api.php';
 
     for(let key in data) {
         FD.append(key, data[key]);
@@ -334,10 +335,9 @@ function tablaGasolineras() {
 }
 
 // al enviar la fecha, la verifica, la envía a un u otro endpoint y la convierte en un formato admitido por la API
- async function cambiarFecha() {
+  function cambiarFecha() {
 
 inputFecha =  document.getElementById('fecha').value
-
      // convierte las fechas mínima, máxima y enviada a ms y las compara, por si se introducen las fechas con el teclado en lugar de usar el datepicker
      let submittedTime = new Date(inputFecha).getTime();
      let minAttr = document.getElementById('fecha').min;
@@ -347,6 +347,7 @@ inputFecha =  document.getElementById('fecha').value
 
      if (submittedTime < minDate || submittedTime > maxDate) {
          alert('fecha no válida')
+         document.getElementById('fecha').valueAsDate = new Date()
          return
      }
 

@@ -5,7 +5,7 @@
       <paths name="localhost">
         <serverdata>
           <mappings>
-            <mapping deploy="openstreetmap" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="EESS" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
