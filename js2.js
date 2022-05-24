@@ -400,4 +400,4 @@ function hideloader() {
     }
 
 // en la tabla facturas quitar fecha edicion (los tickets no se editarán) y poner fecha de repostaje
-// en los campos del form hay que evitar num negativos o no numeros
+
