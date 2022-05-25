@@ -9,7 +9,7 @@ var marker;
 var zoomGeneral = false;
 var objGasolineraSeleccionado;
 var fechaCambiada = false;
-var url = 'http://localhost/EESS/api.php';
+var url = 'http://localhost/EESS/data.php';
 
 //MAPA
 // funcion onload en index.php

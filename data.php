@@ -11,6 +11,8 @@ if($_POST) {
 }
 */
 
+// los datos que llegan desde el formulario al insertar un ticket
+// para obtener estos datos en otras páginas, hacer un require_once de este documento
 $data = $_POST;
 
 // sanitize first

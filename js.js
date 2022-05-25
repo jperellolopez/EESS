@@ -18,7 +18,7 @@ var isSetFromCCAA = false;
 
 //IDEAS
 //1r mapa
-// Opcional: renderizar una tabla con los precios de los últimos 7 días para la 95 y el diesel (obtener fecha actual, sumar los precios, buscar cuantas gasolineras tienen como propiedad el combustible elegido y sumarlas, dividir lo anterior y renderizar una tabla por dom). Hacerlo con las provincias y las localidades elegidas.
+// Opcional: renderizar una tabla con los precios de los últimos 7 días para la gasolinera seleccionada
 // Opcional: mostrar distancia hasta el marcador en la tabla
 // Opcional: cuando la pantalla se hace pequeña, quitar el mapa y renderizar una lista de todas las gasolineras del municipio seleccionado
 
