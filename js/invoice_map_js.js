@@ -11,6 +11,11 @@ var objGasolineraSeleccionado;
 var fechaCambiada = false;
 var url = 'http://localhost/EESS/data.php';
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    locate()
+}, false);
+
 //MAPA
 // funcion onload en index.php
 function locate() {
@@ -243,7 +248,7 @@ function colorChange() {
         }
     })
 
-    let table = document.getElementById('tablaInfo')
+    let table = document.getElementById('tablaInfo2')
 
     let tr = table.getElementsByTagName('tr');
 
@@ -284,7 +289,7 @@ function getMarkersInView() {
 
 function tablaGasolineras() {
 
-    let table = document.getElementById('tablaInfo')
+    let table = document.getElementById('tablaInfo2')
 
     table.innerHTML="";
 
