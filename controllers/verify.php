@@ -1,10 +1,10 @@
 <?php
 // core configuration
-include_once "config/core.php";
+include_once "../config/core.php";
 
 // include classes
-include_once 'config/database.php';
-include_once 'entities/user.php';
+include_once '../config/database.php';
+include_once '../entities/user.php';
 
 // get database connection
 $database = new Database();
@@ -29,6 +29,6 @@ else{
     $user->updateStatusByAccessCode();
 
     // and the redirect
-    header("Location: {$home_url}login.php?action=email_verified");
+    header("Location: {$home_url}controllers/login.php?action=email_verified");
 }
 ?>

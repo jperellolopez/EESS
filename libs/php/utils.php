@@ -1,5 +1,5 @@
 <?php
-// clase utils: se usa para acceder a métodos usados de manera general en la app
+// En esta clase se dispone de métodos auxiliares o usados de manera general en la app
 class Utils{
 
     function getToken($length=32){
@@ -30,8 +30,8 @@ class Utils{
     // send email using built in php mail function
     public function sendEmailViaPhpMail($send_to_email, $subject, $body){
 
-        $from_name="InfoGasolineras App";
-        $from_email="admin@ginfogasolineras.com";
+        $from_name="InfoGasolineras Web";
+        $from_email="admin@infogasolineras.com";
 
         $headers  = "MIME-Version: 1.0\r\n";
         $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";

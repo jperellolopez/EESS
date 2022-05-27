@@ -1,6 +1,6 @@
 <?php
 // core configuration
-include_once "config/core.php";
+include_once "../config/core.php";
 
 // set page title
 $page_title = "Reset Password";
@@ -9,8 +9,8 @@ $page_title = "Reset Password";
 include_once "login_check.php";
 
 // include classes
-include_once "config/database.php";
-include_once "entities/user.php";
+include_once "../config/database.php";
+include_once "../entities/user.php";
 
 // get database connection
 $database = new Database();
@@ -20,7 +20,7 @@ $db = $database->getConnection();
 $user = new User($db);
 
 // include page header HTML
-include_once "layout_head.php";
+include_once "../views/layout_head.php";
 
 echo "<div class='col-sm-12'>";
 
@@ -43,7 +43,7 @@ else{
 
         // reset password
         if($user->updatePassword()){
-            echo "<div class='alert alert-info'>Password was reset. Please <a href='{$home_url}login.php'>login.</a></div>";
+            echo "<div class='alert alert-info'>Password was reset. Please <a href='{$home_url}controllers/login.php'>login.</a></div>";
         }
 
         else{
@@ -51,22 +51,11 @@ else{
         }
     }
 
-    echo "<form action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "?access_code={$access_code}' method='post'>
-    <table class='table table-hover table-responsive table-bordered'>
-        <tr>
-            <td>Password</td>
-            <td><input type='password' name='password' class='form-control' required></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><button type='submit' class='btn btn-primary'>Reset Password</button></td>
-        </tr>
-    </table>
-</form>";
+ include_once "../views/reset_password.php";
 }
 
 echo "</div>";
 
 // include page footer HTML
-include_once "layout_foot.php";
+include_once "../views/layout_foot.php";
 ?>

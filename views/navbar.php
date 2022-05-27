@@ -12,21 +12,28 @@
             </button>
 
             <!-- Change "Your Site" to your site name -->
-            <a class="navbar-brand" href="<?php echo $home_url; ?>">InfoGasolineras</a>
+            <span class="navbar-brand">InfoGasolineras</span>
         </div>
 
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <!-- link to the "Cart" page, highlight if current page is cart.php -->
-                <li <?php echo $page_title=="Index" ? "class='active'" : ""; ?>>
-                    <a href="<?php echo $home_url; ?>">Home</a>
+                <!-- mapa general -->
+                <li <?php echo $page_title=="Mapa de gasolineras" ? "class='active'" : ""; ?>>
+                    <a href="<?php echo $home_url; ?>controllers/general_map.php">Mapa general</a>
                 </li>
+                <?php
+                // opciones visibles para usuarios registrados
+                if(isset($_SESSION['logged_in']) && $_SESSION['logged_in']==true && $_SESSION['access_level']=='Usuario'){
+                ?>
+                <li <?php echo $page_title=="Creación de facturas" ? "class='active'" : ""; ?>>
+                    <a href="<?php echo $home_url; ?>controllers/invoice_map.php">Crear facturas</a>
+                </li>
+
+
+               <?php } ?>
             </ul>
-
             <?php
-
-            // check if users / customer was logged in
-            // if user was logged in, show "Edit Profile", "Orders" and "Logout" options
+            // opciones visibles para usuarios registrados
             if(isset($_SESSION['logged_in']) && $_SESSION['logged_in']==true && $_SESSION['access_level']=='Usuario'){
                 ?>
                 <ul class="nav navbar-nav navbar-right">
@@ -37,7 +44,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="<?php echo $home_url; ?>logout.php">Logout</a></li>
+                            <li><a href="<?php echo $home_url; ?>controllers/logout.php">Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -49,13 +56,13 @@
                 ?>
                 <ul class="nav navbar-nav navbar-right">
                     <li <?php echo $page_title=="Login" ? "class='active'" : ""; ?>>
-                        <a href="<?php echo $home_url; ?>login.php">
+                        <a href="<?php echo $home_url; ?>controllers/login.php">
                             <span class="glyphicon glyphicon-log-in"></span> Log In
                         </a>
                     </li>
 
                     <li <?php echo $page_title=="Register" ? "class='active'" : ""; ?>>
-                        <a href="<?php echo $home_url; ?>register.php">
+                        <a href="<?php echo $home_url; ?>controllers/register.php">
                             <span class="glyphicon glyphicon-check"></span> Register
                         </a>
                     </li>
@@ -69,3 +76,4 @@
     </div>
 </div>
 <!-- /navbar -->
+

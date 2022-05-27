@@ -1,23 +1,3 @@
-<?php
-// core configuration
-include_once "config/core.php";
-
-// set page title
-$page_title="Creación de facturas";
-
-// include login checker
-$require_login=true;
-include_once "login_check.php";
-
-// include page header HTML
-include_once 'layout_head.php';
-
-echo "<div class='col-md-12'>";
-
-// to prevent undefined index notice
-$action = isset($_GET['action']) ? $_GET['action'] : "";
-?>
-
 <div class="d-flex justify-content-center">
     <div class="spinner-border mt-4"
          role="status" id="loading">
@@ -27,7 +7,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : "";
 <br>
 
 <div id="mapContainer">
-    <h2>Mapa de gasolineras</h2>
+    <h4>Selecciona una gasolinera en el mapa para empezar a crear tus facturas. ¡Así de sencillo!</h4>
     <br>
     <div id="map"></div>
 </div>
@@ -47,22 +27,22 @@ $action = isset($_GET['action']) ? $_GET['action'] : "";
 <div id="gasStationForm">
     <form>
         <div>
-            <input  id="combustible1" class="radioOption" type="radio" name="tipoGasolina" value="Gasolina 95">
+            <input  id="combustible1" class="radioOption" type="radio" name="tipoGasolina" value="Gasolina 95 E5">
             <label class="labelCombustible" for="combustible1">Gasolina 95</label>
 
-            <input  id="combustible2" class="radioOption" type="radio" name="tipoGasolina" value="Gasolina 98">
+            <input  id="combustible2" class="radioOption" type="radio" name="tipoGasolina" value="Gasolina 98 E5">
             <label  class="labelCombustible" for="combustible2">Gasolina 98</label>
 
-            <input  id="combustible3" class="radioOption" type="radio" name="tipoGasolina" value="Diesel">
+            <input  id="combustible3" class="radioOption" type="radio" name="tipoGasolina" value="Gasoleo A">
             <label  class="labelCombustible" for="combustible3">Diésel</label>
 
-            <input  id="combustible4" class="radioOption" type="radio" name="tipoGasolina" value="Diesel Plus">
+            <input  id="combustible4" class="radioOption" type="radio" name="tipoGasolina" value="Gasoleo Premium">
             <label  class="labelCombustible" for="combustible4">Diésel +</label>
         </div>
         <br>
         <div>
             <label for="cantidad">Cantidad repostada</label>
-            <input id="cantidad" type="text"  name="cantidad" required>
+            <input id="cantidad" type="text"  name="cantidad" placeholder="euros" required>
         </div>
         <br>
         <div>
@@ -73,8 +53,8 @@ $action = isset($_GET['action']) ? $_GET['action'] : "";
 
 <p id="message"></p>
 
-<script type="text/javascript" src="js/invoice_map_js.js"></script>
+<script type="text/javascript" src="../js/invoice_map_js.js"></script>
 
 <?php
-include 'layout_foot.php';
+include '../views/layout_foot.php';
 ?>

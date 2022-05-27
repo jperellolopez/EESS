@@ -9,7 +9,7 @@ $page_title = "Login";
 
 // include login checker
 $require_login=false;
-include_once "../login_check.php";
+include_once "../controllers/login_check.php";
 
 // default to false
 $access_denied=false;
@@ -20,9 +20,13 @@ if($_POST){
     include_once "../config/database.php";
     include_once "../entities/user.php";
 
+    include_once "../models/userModel.php";
+
 // get database connection
     $database = new Database();
     $db = $database->getConnection();
+
+    //$model = new userModel($db);
 
 // initialize objects
     $user = new User($db);
@@ -32,6 +36,7 @@ if($_POST){
 
 // check if email exists, also get user details using this emailExists() method
     $email_exists = $user->emailExists();
+    //$email_exists = $model->emailExists();
 
 // validate login
     if ($email_exists && password_verify($_POST['password'], $user->password) && $user->status==1){
@@ -43,7 +48,7 @@ if($_POST){
         $_SESSION['firstname'] = htmlspecialchars($user->firstname, ENT_QUOTES, 'UTF-8') ;
         $_SESSION['lastname'] = $user->lastname;
 
-        header("Location: {$home_url}invoice_map.php?action=login_success");
+        header("Location: {$home_url}controllers/invoice_map.php?action=login_success");
 
     }
 

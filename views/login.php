@@ -1,7 +1,7 @@
 <?php
 
 // include page header HTML
-include_once "../layout_head.php";
+include_once "../views/layout_head.php";
 
 echo "<div class='col-sm-6 col-md-4 col-md-offset-4'>";
 
@@ -45,7 +45,7 @@ echo "<input type='text' name='email' class='form-control' placeholder='Email' r
 echo "<input type='password' name='password' class='form-control' placeholder='Password' required />";
 echo "<input type='submit' class='btn btn-lg btn-primary btn-block' value='Log In' />";
 echo "<div class='margin-1em-zero text-align-center'>
-    <a href='{$home_url}forgot_password.php'>Olvidé mi contraseña</a>
+    <a href='{$home_url}controllers/forgot_password.php'>Olvidé mi contraseña</a>
 </div>";
 echo "</form>";
 echo "</div>";
@@ -55,5 +55,5 @@ echo "</div>";
 echo "</div>";
 
 // footer HTML and JavaScript codes
-include_once "../layout_foot.php";
+include_once "../views/layout_foot.php";
 ?>
