@@ -10,7 +10,7 @@ include_once "../controllers/login_check.php";
 
 // include classes
 include_once "../config/database.php";
-include_once '../entities/user.php';
+include_once '../models/user.php';
 include_once "../libs/php/utils.php";
 
 // get database connection
@@ -22,7 +22,7 @@ $user = new User($db);
 $utils = new Utils();
 
 // include page header HTML
-include_once "../views/layout_head.php";
+include_once "../views/templates/layout_head.php";
 
 // if the login form was submitted
 if($_POST){

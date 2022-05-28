@@ -34,7 +34,7 @@
 <body>
 
 <!-- include the navigation bar -->
-<?php include_once '../views/navbar.php'; ?>
+<?php include_once 'navbar.php'; ?>
 
 <!-- container -->
 <div class="container">

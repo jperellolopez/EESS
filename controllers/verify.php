@@ -4,7 +4,7 @@ include_once "../config/core.php";
 
 // include classes
 include_once '../config/database.php';
-include_once '../entities/user.php';
+include_once '../models/user.php';
 
 // get database connection
 $database = new Database();

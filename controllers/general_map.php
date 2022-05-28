@@ -10,7 +10,7 @@ $require_login=false;
 include_once "login_check.php";
 
 // include page header HTML
-include_once '../views/layout_head.php';
+include_once '../views/templates/layout_head.php';
 
 //echo "<div class='col-lg-12'>";
 

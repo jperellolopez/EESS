@@ -43,5 +43,5 @@
     <script type="text/javascript" src="../js/index_map_js.js"></script>
 
     <?php
-    include '../views/layout_foot.php';
+    include '../views/templates/layout_foot.php';
     ?>

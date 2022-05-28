@@ -19,5 +19,5 @@ echo "</div>";
 echo "<div class='col-md-4'></div>";
 
 // footer HTML and JavaScript codes
-include_once "../views/layout_foot.php";
+include_once "../views/templates/layout_foot.php";
 ?>

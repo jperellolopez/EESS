@@ -10,7 +10,7 @@ include_once "login_check.php";
 
 // include classes
 include_once "../config/database.php";
-include_once "../entities/user.php";
+include_once "../models/user.php";
 
 // get database connection
 $database = new Database();
@@ -20,7 +20,7 @@ $db = $database->getConnection();
 $user = new User($db);
 
 // include page header HTML
-include_once "../views/layout_head.php";
+include_once "../views/templates/layout_head.php";
 
 echo "<div class='col-sm-12'>";
 
@@ -57,5 +57,5 @@ else{
 echo "</div>";
 
 // include page footer HTML
-include_once "../views/layout_foot.php";
+include_once "../views/templates/layout_foot.php";
 ?>

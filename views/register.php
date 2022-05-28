@@ -48,5 +48,5 @@
 echo "</div>";
 
 // include page footer HTML
-include_once "../views/layout_foot.php";
+include_once "../views/templates/layout_foot.php";
 ?>

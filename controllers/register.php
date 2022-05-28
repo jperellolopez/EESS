@@ -10,11 +10,11 @@ include_once "login_check.php";
 
 // include classes
 include_once '../config/database.php';
-include_once '../entities/user.php';
+include_once '../models/user.php';
 include_once "../libs/php/utils.php";
 
 // include page header HTML
-include_once "../views/layout_head.php";
+include_once "../views/templates/layout_head.php";
 
 echo "<div class='col-md-12'>";
 

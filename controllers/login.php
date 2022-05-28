@@ -18,15 +18,11 @@ $access_denied=false;
 if($_POST){
     // include classes
     include_once "../config/database.php";
-    include_once "../entities/user.php";
-
-    include_once "../models/userModel.php";
+    include_once "../models/user.php";
 
 // get database connection
     $database = new Database();
     $db = $database->getConnection();
-
-    //$model = new userModel($db);
 
 // initialize objects
     $user = new User($db);
@@ -36,7 +32,6 @@ if($_POST){
 
 // check if email exists, also get user details using this emailExists() method
     $email_exists = $user->emailExists();
-    //$email_exists = $model->emailExists();
 
 // validate login
     if ($email_exists && password_verify($_POST['password'], $user->password) && $user->status==1){
