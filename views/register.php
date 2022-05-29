@@ -20,17 +20,22 @@
         <tr>
             <td>Address</td>
             <td><textarea name='address' class='form-control' required><?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address'], ENT_QUOTES) : "";  ?></textarea></td>
-</tr>
+        </tr>
 
-<tr>
-    <td>Email</td>
-    <td><input type='email' name='email' class='form-control' required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email'], ENT_QUOTES) : "";  ?>" /></td>
-</tr>
+        <tr>
+            <td>Postal Code</td>
+            <td><textarea name='address' class='form-control' required><?php echo isset($_POST['postal_code']) ? htmlspecialchars($_POST['postal_code'], ENT_QUOTES) : "";  ?></textarea></td>
+        </tr>
 
-<tr>
-    <td>Password</td>
-    <td><input type='password' name='password' class='form-control' required id='passwordInput'></td>
-</tr>
+        <tr>
+            <td>Email</td>
+            <td><input type='email' name='email' class='form-control' required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email'], ENT_QUOTES) : "";  ?>" /></td>
+        </tr>
+
+        <tr>
+            <td>Password</td>
+            <td><input type='password' name='password' class='form-control' required id='passwordInput'></td>
+        </tr>
 
 <tr>
     <td></td>

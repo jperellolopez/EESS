@@ -46,6 +46,7 @@ if($_POST){
         $user->lastname=$_POST['lastname'];
         $user->contact_number=$_POST['contact_number'];
         $user->address=$_POST['address'];
+        $user->postal_code=$_POST['postal_code'];
         $user->password=$_POST['password'];
         $user->access_level='Usuario';
         $user->status=0;

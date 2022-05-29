@@ -17,6 +17,9 @@ class Invoice {
         $this->conn = $db;
     }
 
+
+
+
     // used for paging invoices - count all invoices
     public function countAllInvoices(){
 

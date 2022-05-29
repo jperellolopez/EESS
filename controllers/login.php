@@ -42,6 +42,7 @@ if($_POST){
         $_SESSION['access_level'] = $user->access_level;
         $_SESSION['firstname'] = htmlspecialchars($user->firstname, ENT_QUOTES, 'UTF-8') ;
         $_SESSION['lastname'] = $user->lastname;
+        $_SESSION['email'] = $user->email;
 
         header("Location: {$home_url}controllers/invoice_map.php?action=login_success");
 

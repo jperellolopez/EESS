@@ -3,7 +3,7 @@
 include_once "../config/core.php";
 
 // set page title
-$page_title = "Forgot Password";
+$page_title = "Restablecer contraseña";
 
 // include login checker
 include_once "../controllers/login_check.php";

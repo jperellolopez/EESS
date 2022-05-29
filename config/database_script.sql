@@ -3,6 +3,7 @@
 CREATE DATABASE IF NOT EXISTS eess;
 USE eess;
 
+
 -- CREACIÓN TABLAS
 
  CREATE TABLE `users` (
@@ -13,6 +14,7 @@ USE eess;
   `contact_number` varchar(64) NOT NULL,
   `address` text NOT NULL,
   `password` varchar(512) NOT NULL,
+  `postal_code` varchar(5) NOT NULL,
   `access_level` varchar(16) NOT NULL,
   `access_code` text NOT NULL,
   `status` int NOT NULL COMMENT '0=pending,1=confirmed',
@@ -82,9 +84,9 @@ INSERT INTO `regions` (`region_id`, `region`) VALUES
 (18, 'Ceuta'),
 (19, 'Melilla');
 
-INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `contact_number`, `address`, `password`, `access_level`, `access_code`, `status`, `created`, `modified`) VALUES
-(1, 'Nombre', 'Apellido', 'ejemplo@example.com', '9331868359', 'Calle de Ejemplo, 23', '$2y$10$tLq9lTKDUt7EyTFhxL0QHuen/BgO9YQzFYTUyH50kJXLJ.ISO3HAO', 'Usuario', 'ILXFBdMAbHVrJswNDnm231cziO8FZomn', 1, '2019-10-29 17:31:09', '2019-06-13 18:18:25');
+-- usuario de prueba
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `contact_number`, `address`, `postal_code`, `password`, `access_level`, `access_code`, `status`, `created`, `modified`) VALUES (1, 'Nombre', 'Apellido', 'ejemplo@example.com', '9331868359', 'Calle de Ejemplo, 23', '07001', '$2y$10$tLq9lTKDUt7EyTFhxL0QHuen/BgO9YQzFYTUyH50kJXLJ.ISO3HAO', 'Usuario', 'ILXFBdMAbHVrJswNDnm231cziO8FZomn', 1, '2019-10-29 17:31:09', '2019-06-13 18:18:25');
 
--- credenciales usuario de prueba
+-- credenciales
 -- Username: ejemplo@example.com
 -- Password: darwin12qw!@QW
