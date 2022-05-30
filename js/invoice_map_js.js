@@ -9,7 +9,7 @@ var marker;
 var zoomGeneral = false;
 var objGasolineraSeleccionado;
 var fechaCambiada = false;
-var url = 'http://localhost/EESS/data.php';
+var url = 'http://localhost/EESS/controllers/invoice_map.php';
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -197,9 +197,11 @@ function enviarDatos() {
     }
 
     let amountSelected = document.getElementById('cantidad').value;
+    // con la conversión admitirá números separados por comas y/o puntos
+    amountSelected = amountSelected.replace(/,/g, '.');
 
     // validar campos
-    if (radioSelected !== undefined && amountSelected !== "" && !isNaN(amountSelected) && amountSelected > 0) {
+    if (radioSelected !== undefined && amountSelected !== "" && !isNaN(amountSelected) && (amountSelected > 0 && amountSelected < 1000)) {
 
         // incorpora al objeto gasolinera los datos del formulario
         let c = {

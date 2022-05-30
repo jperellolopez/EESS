@@ -24,10 +24,10 @@ $utils = new Utils();
 // include page header HTML
 include_once "../views/templates/layout_head.php";
 
+$action = isset($_GET['action']) ? $_GET['action'] : "";
+
 // if the login form was submitted
 if($_POST){
-
-    echo "<div class='col-sm-12'>";
 
     // check if username and password are in the database
     $user->email=$_POST['email'];
@@ -47,25 +47,28 @@ if($_POST){
             $send_to_email=$_POST['email'];
 
             if($utils->sendEmailViaPhpMail($send_to_email, $subject, $body)){
-                echo "<div class='alert alert-info'>
-                            Password reset link was sent to your email.
-                            Click that link to reset your password.
-                        </div>";
+                header("Location: {$home_url}controllers/forgot_password.php?action=reset_link_sent");
             }
 
             // message if unable to send email for password reset link
-            else{ echo "<div class='alert alert-danger'>ERROR: Unable to send reset link.</div>"; }
+            else{
+                header("Location: {$home_url}controllers/forgot_password.php?action=reset_link_error");
+                 }
         }
 
         // message if unable to update access code
-        else{ echo "<div class='alert alert-danger'>ERROR: Unable to update access code.</div>"; }
+        else{
+            header("Location: {$home_url}controllers/forgot_password.php?action=access_code_not_updated");
+
+        }
 
     }
 
     // message if email does not exist
-    else{ echo "<div class='alert alert-danger'>Your email cannot be found.</div>"; }
+    else{
+        header("Location: {$home_url}controllers/forgot_password.php?action=email_not_found");
+    }
 
-    echo "</div>";
 }
 
 include_once "../views/forgot_password.php";

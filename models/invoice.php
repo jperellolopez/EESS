@@ -10,15 +10,13 @@ class Invoice {
     public $fuel_type;
     public $fuel_price;
     public $money_spent;
+    public $refuel_date;
     public $created;
 
     // constructor
     public function __construct($db){
         $this->conn = $db;
     }
-
-
-
 
     // used for paging invoices - count all invoices
     public function countAllInvoices(){
@@ -37,6 +35,46 @@ class Invoice {
 
     // return row count
      return $num;
+    }
+
+    public function insertNewInvoice() {
+
+        $this->created=date('Y-m-d H:i:s');
+
+        $query = "INSERT INTO
+                " . $this->table_name . "
+            SET 
+            gas_station_id = :gas_station_id,
+            user_id = :user_id,
+            fuel_type = :fuel_type,
+            fuel_price = :fuel_price,
+            money_spent = :money_spent,
+            refuel_date = :refuel_date,
+            created = :created";
+
+        $stmt = $this->conn->prepare($query);
+
+        $this->gas_station_id=htmlspecialchars(strip_tags($this->gas_station_id));
+        $this->user_id=htmlspecialchars(strip_tags($this->user_id));
+        $this->fuel_type=htmlspecialchars(strip_tags($this->fuel_type));
+        $this->fuel_price=htmlspecialchars(strip_tags($this->fuel_price));
+        $this->money_spent=htmlspecialchars(strip_tags($this->money_spent));
+        $this->refuel_date=htmlspecialchars(strip_tags($this->refuel_date));
+
+        $stmt->bindParam('gas_station_id', $this->gas_station_id);
+        $stmt->bindParam('user_id', $this->user_id);
+        $stmt->bindParam('fuel_type', $this->fuel_type);
+        $stmt->bindParam('fuel_price', $this->fuel_price);
+        $stmt->bindParam('money_spent', $this->money_spent);
+        $stmt->bindParam('refuel_date', $this->refuel_date);
+        $stmt->bindParam('created', $this->created);
+
+        if($stmt->execute()){
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
 }

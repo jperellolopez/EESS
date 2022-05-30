@@ -1,3 +1,4 @@
+<div class='col-md-12'>
 <div class="d-flex justify-content-center">
     <div class="spinner-border mt-4"
          role="status" id="loading">
@@ -42,7 +43,7 @@
         <br>
         <div>
             <label for="cantidad">Cantidad repostada</label>
-            <input id="cantidad" type="text"  name="cantidad" placeholder="euros" required>
+            <input id="cantidad" type="text"  name="cantidad" placeholder="entre 1 y 999 €" required>
         </div>
         <br>
         <div>

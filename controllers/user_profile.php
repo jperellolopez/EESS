@@ -21,21 +21,10 @@ include_once "login_check.php";
 // include page header HTML
 include_once '../views/templates/layout_head.php';
 
-echo "<div class='col-md-12'>";
+
 
 // to prevent undefined index notice
 $action = isset($_GET['action']) ? $_GET['action'] : "";
-
-// if login was successful
- if ($action == 'changed_profile') {
-    echo "<div class='alert alert-success'>";
-    echo   "<strong>" . 'El perfil ha sido actualizado' . "</strong>";
-    echo "</div>";
-} else if ($action == 'email_unavailable') {
-     echo "<div class='alert alert-danger'>";
-     echo   "<strong>" . 'El email introducido ya está en uso' . "</strong>";
-     echo "</div>";
- }
 
 $database = new Database();
 $db = $database->getConnection();
@@ -44,6 +33,11 @@ $user->id=$_SESSION['user_id'];
 $userinfo = $user->showUserData();
 
 if (isset($_POST['edituserdata'])) {
+
+    $address = trim($_POST['address']);
+
+    // valida el textarea ya que no admite regex
+    if ($address !== "" && !empty($address) && strlen($address) > 5) {
 
     $user->firstname=$_POST['firstname'];
     $user->lastname=$_POST['lastname'];
@@ -59,6 +53,10 @@ if (isset($_POST['edituserdata'])) {
 
     if ($user->editProfile()) {
         header("Location: {$home_url}controllers/user_profile.php?action=changed_profile");
+    }
+
+        } else {
+        header("Location: {$home_url}controllers/user_profile.php?action=wrong_address");
     }
 
 }

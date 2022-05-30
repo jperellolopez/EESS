@@ -1,4 +1,20 @@
+<div class='col-sm-12'>
+
 <?php
+if ($action == "reset_link_sent") {
+    echo "<div class='alert alert-info'>
+                            Password reset link was sent to your email.
+                            Click that link to reset your password.
+                        </div>";
+} else if ($action == "reset_link_error") {
+    echo "<div class='alert alert-danger'>ERROR: Unable to send reset link.</div>";
+} else if ($action == "access_code_not_updated") {
+    echo "<div class='alert alert-danger'>ERROR: Unable to update access code.</div>";
+} else if ($action == "email_not_found") {
+    echo "<div class='alert alert-danger'>Your email cannot be found.</div>";
+}
+
+echo "</div>";
 // show reset password HTML form
 echo "<div class='col-md-4'></div>";
 echo "<div class='col-md-4'>";

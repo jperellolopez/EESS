@@ -19,10 +19,11 @@ $db = $database->getConnection();
 // initialize objects
 $user = new User($db);
 
+$updated1 = false;
+$updated2 = false;
+
 // include page header HTML
 include_once "../views/templates/layout_head.php";
-
-echo "<div class='col-sm-12'>";
 
 // get given access code
 $access_code=isset($_GET['access_code']) ? $_GET['access_code'] : die("Access code not found.");
@@ -36,25 +37,25 @@ if(!$user->accessCodeExists()){
 
 else{
     // if form was posted
-    if($_POST){
+
+    if($_POST) {
 
         // set values to object properties
-        $user->password=$_POST['password'];
+        $user->password = $_POST['password'];
 
         // reset password
-        if($user->updatePassword()){
-            echo "<div class='alert alert-info'>Password was reset. Please <a href='{$home_url}controllers/login.php'>login.</a></div>";
-        }
+        if ($user->updatePassword()) {
+        $updated1 = true;
+        $updated2 = false;
 
-        else{
-            echo "<div class='alert alert-danger'>Unable to reset password.</div>";
+        }  else{
+           $updated2 = true;
+           $updated1 = false;
         }
     }
 
  include_once "../views/reset_password.php";
 }
-
-echo "</div>";
 
 // include page footer HTML
 include_once "../views/templates/layout_foot.php";

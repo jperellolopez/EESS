@@ -3,15 +3,14 @@
 CREATE DATABASE IF NOT EXISTS eess;
 USE eess;
 
-
 -- CREACIÓN TABLAS
 
  CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `firstname` varchar(32) NOT NULL,
-  `lastname` varchar(32) NOT NULL,
+  `lastname` varchar(64) NOT NULL,
   `email` varchar(64) NOT NULL,
-  `contact_number` varchar(64) NOT NULL,
+  `contact_number` varchar(32) NOT NULL,
   `address` text NOT NULL,
   `password` varchar(512) NOT NULL,
   `postal_code` varchar(5) NOT NULL,
@@ -30,7 +29,7 @@ PRIMARY KEY (`region_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 CREATE TABLE `gas_stations` (
-  `gas_station_id` int NOT NULL AUTO_INCREMENT,
+  `gas_station_id` int NOT NULL,
   `address` varchar(250) NOT NULL,
   `postal_code` varchar(5) NOT NULL,
   `latitude` varchar(12) NOT NULL,
@@ -51,8 +50,9 @@ CREATE TABLE `invoices` (
   `gas_station_id` int NOT NULL,
   `user_id` int NOT NULL,
   `fuel_type` varchar(100) NOT NULL,
-  `fuel_price` decimal(10,0) NOT NULL,
-  `money_spent` decimal(10,0) NOT NULL,
+  `fuel_price` decimal(10,3) NOT NULL,
+  `money_spent` decimal(10,2) NOT NULL,
+  `refuel_date` varchar(45) NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`invoice_id`),
   KEY `userId_idx` (`user_id`),
