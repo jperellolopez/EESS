@@ -52,7 +52,7 @@ CREATE TABLE `invoices` (
   `fuel_type` varchar(100) NOT NULL,
   `fuel_price` decimal(10,3) NOT NULL,
   `money_spent` decimal(10,2) NOT NULL,
-  `refuel_date` varchar(45) NOT NULL,
+  `refuel_date` date NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`invoice_id`),
   KEY `userId_idx` (`user_id`),

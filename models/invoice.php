@@ -18,22 +18,19 @@ class Invoice {
         $this->conn = $db;
     }
 
-    // used for paging invoices - count all invoices
+    // cuenta las facturas para paginarlas
     public function countAllInvoices(){
 
-    $query = "SELECT invoice_id FROM invoices where user_id = :user_id";
+    $query = "SELECT invoice_id FROM " . $this->table_name . " where user_id = :user_id";
 
     $stmt = $this->conn->prepare($query);
 
     $stmt->bindParam(':user_id', $this->user_id);
 
-    // execute query
     $stmt->execute();
 
-    // get number of rows
     $num = $stmt->rowCount();
 
-    // return row count
      return $num;
     }
 
@@ -78,7 +75,7 @@ class Invoice {
     }
 
     public function countUserInvoices($from_record_num, $records_per_page){
-        $query = "SELECT i.invoice_id, gs.brand, gs.address, gs.municipality, i.refuel_date  FROM gas_stations as gs inner join invoices as i on i.gas_station_id = gs.gas_station_id WHERE user_id = ? ORDER BY i.invoice_id DESC LIMIT ?, ?;";
+        $query = "SELECT i.invoice_id, gs.brand, gs.address, gs.municipality, i.refuel_date  FROM gas_stations as gs inner join " . $this->table_name . " as i on i.gas_station_id = gs.gas_station_id WHERE user_id = ? ORDER BY i.invoice_id DESC LIMIT ?, ?;";
 
         $stmt = $this->conn->prepare($query);
 
@@ -94,7 +91,7 @@ class Invoice {
     }
 
     public function deleteInvoice() {
-        $query = "DELETE FROM invoices WHERE invoice_id = ?";
+        $query = "DELETE FROM " . $this->table_name . " WHERE invoice_id = ?";
 
         $stmt = $this->conn->prepare($query);
 
@@ -102,6 +99,38 @@ class Invoice {
 
         $stmt->execute();
 
+    }
+
+    public function searchInvoicesByDate($date1, $date2, $from_record_num, $records_per_page) {
+
+            $query = "SELECT i.invoice_id, gs.brand, gs.address, gs.municipality, i.refuel_date  FROM gas_stations as gs inner join " . $this->table_name . " as i on i.gas_station_id = gs.gas_station_id WHERE user_id = ? AND i.refuel_date BETWEEN '".$date1."' AND '".$date2."' ORDER BY i.refuel_date DESC LIMIT ?, ?;";
+
+            $stmt = $this->conn->prepare($query);
+
+            $this->user_id=htmlspecialchars(strip_tags($this->user_id));
+
+            $stmt->bindParam(1, $this->user_id);
+
+            $stmt->bindParam(2, $from_record_num, PDO::PARAM_INT);
+            $stmt->bindParam(3, $records_per_page, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function countAllInvoicesByDate($date1, $date2) {
+
+            $query = "SELECT i.invoice_id, gs.brand, gs.address, gs.municipality, i.refuel_date  FROM gas_stations as gs inner join " . $this->table_name . " as i on i.gas_station_id = gs.gas_station_id WHERE user_id = ? AND i.refuel_date BETWEEN '".$date1."' AND '".$date2."'";
+
+        $stmt = $this->conn->prepare($query);
+
+            $this->user_id=htmlspecialchars(strip_tags($this->user_id));
+
+            $stmt->bindParam(1, $this->user_id);
+
+        $stmt->execute();
+        $num = $stmt->rowCount();
+        return $num;
     }
 
 }

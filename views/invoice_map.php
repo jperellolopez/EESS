@@ -1,6 +1,5 @@
 <?php
 include_once '../views/templates/layout_head.php';
-// to prevent undefined index notice
 $action = isset($_GET['action']) ? $_GET['action'] : "";
 ?>
 
@@ -53,7 +52,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : "";
         </div>
         <br>
         <div>
-            <button id="submitBtn" type="button" onclick="enviarDatos()">Generar ticket</button>
+            <button id="submitBtn" type="button" onclick="enviarDatos()">Generar factura</button>
         </div>
     </form>
 </div>

@@ -1,30 +1,7 @@
 
 <?php
 /*
-// enviar estos datos al controlador, es decir a controllers/invoice_map, configurar en js
-// los datos que llegan desde el formulario al insertar un ticket
-
-if ($_POST) {
-    $data = $_POST;
-// sanitize first
-    echo "\n\n:: Data received via POST ::\n\n";
-    print_r($data);
-
-
-    //ejemplo: almacenar sacar tipo y precio en variables
-    $tipo = $data["Combustible_Repostado"];
-    // en este punto $tipo se mete en la bd
-    $tipo = str_replace(' ', '_', $tipo);
-    echo $tipo;
-    $precio = $data["Precio_".$tipo];
-    echo $precio;
-
-
-}
- */
-
 //Ejemplo de envío de datos
-/*
 Array
 (
     [C_P_] => 07009
@@ -64,8 +41,6 @@ Array
     [Fecha_Repostaje] => 2022-04-28
 )
 */
-
-
  ?>
 
 

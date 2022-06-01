@@ -1,11 +1,17 @@
 <?php
-// include page header HTML
+
 include_once '../views/templates/layout_head.php';
 
 echo "<div class='col-md-12'>";
 
 if($err){
-    echo "<div class='alert alert-danger margin-top-40' role='alert'>Todavía no hay facturas registradas</div>";
+    echo "<div class='alert alert-danger margin-top-40' role='alert'>Todavía no hay facturas registradas.</div>";
+} else if ($datesearch) {
+    echo "<div class='alert alert-info'>Mostrando facturas entre ". date('d-m-Y', strtotime($fechaInicio)) . " y " . date('d-m-Y', strtotime($fechaFin))."</div>";
+} else if ($noncompatibledate) {
+    echo "<div class='alert alert-danger margin-top-40' role='alert'>La fecha de inicio (". date('d-m-Y', strtotime($fechaInicio)) .") no puede ser igual o posterior a la final (" . date('d-m-Y', strtotime($fechaFin)) . "). <a href='../controllers/invoice_list.php'><strong>Volver</strong></a></div>";
+} else if ($errFecha) {
+    echo "<div class='alert alert-danger margin-top-40' role='alert'>No hay facturas entre ". date('d-m-Y', strtotime($fechaInicio)) . " y " . date('d-m-Y', strtotime($fechaFin)) . ". <a href='../controllers/invoice_list.php'><strong>Volver</strong></a> </div>";
 }
 
 if ($generateth) {  ?>
@@ -23,10 +29,10 @@ if ($generateth) {  ?>
         <form action="" method="post" autocomplete="on">
             <div class="mb-3">
                 <label for="fechaInicio">Desde</label>
-                <input type='date' name='fechaInicio' value="<?php echo $fechaInicio;?>"/>
+                <input type='date'  min="2022-01-01" max="<?php echo $curDate?>" name='fechaInicio' value="<?php echo $fechaInicio;?>"/>
                 &nbsp;
                 <label for="fechaFin">Hasta</label>
-                <input type='date' name='fechaFin' value='<?php echo $fechaFin?>'/>
+                <input type='date' min="2022-01-01" max="<?php echo $curDate?>" name='fechaFin' value='<?php echo $fechaFin?>'/>
                 <button type="submit" class="btn btn-primary" name="submitInvoiceDate">Buscar</button>
             </div>
         </form>

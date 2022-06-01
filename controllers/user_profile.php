@@ -3,18 +3,14 @@
  * @var string $home_url
  */
 
-// include classes
 include_once '../config/database.php';
 include_once '../models/user.php';
 include_once "../libs/php/utils.php";
 
-// core configuration
 include_once "../config/core.php";
 
-// set page title
 $page_title = "Perfil de usuario";
 
-// include login checker
 $require_login = true;
 include_once "login_check.php";
 

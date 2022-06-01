@@ -22,25 +22,24 @@
             integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
             crossorigin=""></script>
 
-    <!-- MarkerCluster -->
+    <!-- MarkerCluster plugin -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <script type="text/javascript" src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
-    <!-- admin custom CSS -->
+    <!-- custom CSS -->
     <link href="<?php echo $home_url . "libs/css/style.css" ?>" rel="stylesheet" />
 
 </head>
 <body>
 
-<!-- include the navigation bar -->
+<!-- navbar -->
 <?php include_once 'navbar.php'; ?>
 
 <!-- container -->
 <div class="container">
 
     <?php
-    // if given page title is 'Login', do not display the title
     if($page_title!="Login"){
     ?>
     <div class='col-md-12'>

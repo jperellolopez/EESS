@@ -1,57 +1,47 @@
 <?php
-// core configuration
 include_once "../config/core.php";
-
-// set page title
 $page_title = "Restablecer contraseña";
-
-// include login checker
 include_once "../controllers/login_check.php";
-
-// include classes
 include_once "../config/database.php";
 include_once '../models/user.php';
 include_once "../libs/php/utils.php";
 
-// get database connection
 $database = new Database();
 $db = $database->getConnection();
 
-// initialize objects
 $user = new User($db);
 $utils = new Utils();
 
-// if the login form was submitted
 if($_POST){
 
-    // check if username and password are in the database
+    // consulta si el usuario está en la bd
     $user->email=$_POST['email'];
 
     if($user->emailExists()){
 
-        // update access code for user
+        // genera y actualiza el código de acceso
         $access_code=$utils->getToken();
 
         $user->access_code=$access_code;
         if($user->updateAccessCode()){
 
-            // send reset link
+            // envia un link de reseteo con el código
             $body="Hi there.<br /><br />";
-            $body.="Please click the following link to reset your password: {$home_url}controllers/reset_password.php/?access_code={$access_code}";
-            $subject="Reset Password";
+            $body.="Por favor, pulsa en el siguiente link para resetear tu contraseña: {$home_url}controllers/reset_password.php/?access_code={$access_code}";
+            $subject="Restablecimiento de contraseña";
             $send_to_email=$_POST['email'];
 
             if($utils->sendEmailViaPhpMail($send_to_email, $subject, $body)){
                 header("Location: {$home_url}controllers/forgot_password.php?action=reset_link_sent");
             }
 
-            // message if unable to send email for password reset link
+            // si no se puede enviar el email
             else{
                 header("Location: {$home_url}controllers/forgot_password.php?action=reset_link_error");
                  }
         }
 
-        // message if unable to update access code
+        // si no se puede actualizar el código de acceso
         else{
             header("Location: {$home_url}controllers/forgot_password.php?action=access_code_not_updated");
 
@@ -59,7 +49,7 @@ if($_POST){
 
     }
 
-    // message if email does not exist
+    // si el email no existe
     else{
         header("Location: {$home_url}controllers/forgot_password.php?action=email_not_found");
     }

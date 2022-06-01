@@ -1,8 +1,6 @@
 <?php
-// include page header HTML
 include_once '../views/templates/layout_head.php';
 
-// to prevent undefined index notice
 $action = isset($_GET['action']) ? $_GET['action'] : "";
 ?>
 

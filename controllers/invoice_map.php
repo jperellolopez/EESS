@@ -1,24 +1,19 @@
 <?php
-// core configuration
 include_once "../config/core.php";
 
-// set page title
 $page_title="Creación de facturas";
 
-// include login checker
 $require_login=true;
 include_once "login_check.php";
 
-// include page header HTML
 include_once '../config/database.php';
 include_once '../models/gas_station.php';
 include_once '../models/invoice.php';
 
-// recibir datos del mapa
+// recibir datos del mapa por httprequest
 if (isset($_POST) && !empty($_POST)) {
 
     $data = $_POST;
-    //print_r($data);
 
     $database = new Database();
     $db = $database->getConnection();
@@ -28,7 +23,6 @@ if (isset($_POST) && !empty($_POST)) {
 
     $gas_station->gas_station_id=$data['IDEESS'];
 
-    // la gasolinera no existe, la insertará antes de crear la factura
     if (!$gas_station->checkGasStationExists()) {
 
         $gas_station->gas_station_id = $data['IDEESS'];
@@ -45,8 +39,6 @@ if (isset($_POST) && !empty($_POST)) {
         $gas_station->insertNewGasStation();
 
     }
-
-    // inserta la factura
 
     $invoice->gas_station_id = $data['IDEESS'];
     $invoice->user_id = $_SESSION['user_id'];

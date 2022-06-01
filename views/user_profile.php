@@ -2,16 +2,14 @@
 /**
 * @var string $userinfo
 */
-// include page header HTML
+
 include_once '../views/templates/layout_head.php';
 
-// to prevent undefined index notice
 $action = isset($_GET['action']) ? $_GET['action'] : "";
 
 
 echo "<div class='col-md-12'>";
 
-// if login was successful
 if ($action == 'changed_profile') {
     echo "<div class='alert alert-success'>El perfil ha sido actualizado</div>";
 } else if ($action == 'email_unavailable') {
@@ -133,6 +131,5 @@ if (isset($_POST['editoption'])) { ?>
 <?php } ?>
 
 <?php
-// footer HTML and JavaScript codes
 include '../views/templates/layout_foot.php';
 ?>

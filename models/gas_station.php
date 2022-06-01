@@ -22,6 +22,7 @@ class Gas_station {
         $this->conn = $db;
     }
 
+    // comprueba si la gasolinera existe
     public function checkGasStationExists(){
 
         $query = "SELECT gas_station_id, address, postal_code, brand, region_id, province, municipality, opening_hours FROM " . $this->table_name . " WHERE gas_station_id = ?";
@@ -38,7 +39,6 @@ class Gas_station {
 
         if ($num>0) {
 
-            // la gasolinera ya existe
             return true;
         } else {
             return false;
@@ -46,6 +46,7 @@ class Gas_station {
 
     }
 
+    // inserta un nueva entrada en la tabla gas_stations
     public function insertNewGasStation() {
 
         $this->created=date('Y-m-d H:i:s');
@@ -96,8 +97,5 @@ class Gas_station {
         }
 
     }
-
-
-
 
 }

@@ -15,7 +15,7 @@
 <footer>
 
 </footer>
-<!-- end HTML page -->
+<!-- fin del HTML -->
 </body>
 
 </html>

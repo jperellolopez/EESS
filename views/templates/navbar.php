@@ -51,26 +51,26 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="<?php echo $home_url; ?>controllers/logout.php">Logout</a></li>
+                            <li><a href="<?php echo $home_url; ?>controllers/logout.php">Cerrar sesión</a></li>
                         </ul>
                     </li>
                 </ul>
                 <?php
             }
 
-            // if user was not logged in, show the "login" and "register" options
+            // muestra las opciones de login y registro para usuarios no logeados
             else{
                 ?>
                 <ul class="nav navbar-nav navbar-right">
                     <li <?php echo $page_title=="Login" ? "class='active'" : ""; ?>>
                         <a href="<?php echo $home_url; ?>controllers/login.php">
-                            <span class="glyphicon glyphicon-log-in"></span> Log In
+                            <span class="glyphicon glyphicon-log-in"></span> Iniciar sesión
                         </a>
                     </li>
 
                     <li <?php echo $page_title=="Register" ? "class='active'" : ""; ?>>
                         <a href="<?php echo $home_url; ?>controllers/register.php">
-                            <span class="glyphicon glyphicon-check"></span> Register
+                            <span class="glyphicon glyphicon-check"></span> Registrar usuario
                         </a>
                     </li>
                 </ul>

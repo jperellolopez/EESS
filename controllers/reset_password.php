@@ -1,32 +1,24 @@
 <?php
-// core configuration
 include_once "../config/core.php";
 
-// set page title
 $page_title = "Reset Password";
 
-// include login checker
 include_once "login_check.php";
 
-// include classes
 include_once "../config/database.php";
 include_once "../models/user.php";
 
-// get database connection
 $database = new Database();
 $db = $database->getConnection();
 
-// initialize objects
 $user = new User($db);
 
 $updated1 = false;
 $updated2 = false;
 
-
-// get given access code
 $access_code=isset($_GET['access_code']) ? $_GET['access_code'] : die("Access code not found.");
 
-// check if access code exists
+// comprueba que exista el codigo de acceso
 $user->access_code=$access_code;
 
 if(!$user->accessCodeExists()){
@@ -34,11 +26,9 @@ if(!$user->accessCodeExists()){
 }
 
 else{
-    // if form was posted
 
     if($_POST) {
 
-        // set values to object properties
         $user->password = $_POST['password'];
 
         // reset password

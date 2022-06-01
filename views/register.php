@@ -1,5 +1,5 @@
 <?php
-// include page header HTML
+
 include_once "../views/templates/layout_head.php";
 
 $action = isset($_GET['action']) ? $_GET['action'] : "";
@@ -8,18 +8,18 @@ echo "<div class='col-md-12'>";
 
 if ($action == 'email_exists') {
     echo "<div class='alert alert-danger'>";
-    echo "The email you specified is already registered. Please try again or <a href='{$home_url}controllers/login.php'>login.</a>";
+    echo "El email indicado ya está en uso. Inténtalo de nuevo o <a href='{$home_url}controllers/login.php'>inicia sesión.</a>";
     echo "</div>";
 } else if ($action == 'register_successful') {
     echo "<div class='alert alert-success'>
-            Verification link was sent to your email. Click that link to login.
+            El email de verificación se ha enviado a la dirección indicada. Haz click sobre él para iniciar sesión.
         </div>";
 } else if ($action == 'register_partial') {
     echo "<div class='alert alert-danger'>
-            User was created but unable to send verification email. Please contact admin.
+            El usuario se ha creado, pero no se ha podido enviar el email de verificación.
         </div>";
 } else if ($action == 'register_err') {
-    echo "<div class='alert alert-danger' role='alert'>Unable to register. Please try again.</div>";
+    echo "<div class='alert alert-danger' role='alert'>No se ha podido registrar el registro. Inténtelo de nuevo.</div>";
 } else if ($action == 'invalid_address') {
     echo "<div class='alert alert-danger' role='alert'>Introduzca una dirección válida (mín 6 caracteres)</div>";
 }
@@ -76,10 +76,9 @@ if ($action == 'email_exists') {
 
 </table>
 </form>
+
+</div>
 <?php
-
-echo "</div>";
-
 // include page footer HTML
 include_once "../views/templates/layout_foot.php";
 ?>

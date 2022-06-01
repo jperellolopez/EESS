@@ -1,34 +1,26 @@
 <?php
-// core configuration
 include_once "../config/core.php";
 
-// include classes
 include_once '../config/database.php';
 include_once '../models/user.php';
 
-// get database connection
 $database = new Database();
 $db = $database->getConnection();
 
-// initialize objects
 $user = new User($db);
 
-// set access code
 $user->access_code=isset($_GET['access_code']) ? $_GET['access_code'] : "";
 
-// verify if access code exists
 if(!$user->accessCodeExists()){
-    die("ERROR: Access code not found.");
+    die("ERROR: Código de acceso no encontrado.");
 }
 
-// redirect to login
 else{
 
-    // update status
+    // pasa el status del usuario de 0 (inactivo) a 1 en la bd
     $user->status=1;
     $user->updateStatusByAccessCode();
 
-    // and the redirect
     header("Location: {$home_url}controllers/login.php?action=email_verified");
 }
 ?>
