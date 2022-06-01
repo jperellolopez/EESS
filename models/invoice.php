@@ -93,4 +93,15 @@ class Invoice {
         return $stmt;
     }
 
+    public function deleteInvoice() {
+        $query = "DELETE FROM invoices WHERE invoice_id = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(1, $this->invoice_id);
+
+        $stmt->execute();
+
+    }
+
 }

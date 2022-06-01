@@ -1,3 +1,9 @@
+<?php
+include_once '../views/templates/layout_head.php';
+// to prevent undefined index notice
+$action = isset($_GET['action']) ? $_GET['action'] : "";
+?>
+
 <div class='col-md-12'>
 <div class="d-flex justify-content-center">
     <div class="spinner-border mt-4"

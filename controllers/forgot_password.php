@@ -21,11 +21,6 @@ $db = $database->getConnection();
 $user = new User($db);
 $utils = new Utils();
 
-// include page header HTML
-include_once "../views/templates/layout_head.php";
-
-$action = isset($_GET['action']) ? $_GET['action'] : "";
-
 // if the login form was submitted
 if($_POST){
 

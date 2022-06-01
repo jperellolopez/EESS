@@ -10,13 +10,9 @@ $require_login=true;
 include_once "login_check.php";
 
 // include page header HTML
-include_once '../views/templates/layout_head.php';
 include_once '../config/database.php';
 include_once '../models/gas_station.php';
 include_once '../models/invoice.php';
-
-// to prevent undefined index notice
-$action = isset($_GET['action']) ? $_GET['action'] : "";
 
 // recibir datos del mapa
 if (isset($_POST) && !empty($_POST)) {

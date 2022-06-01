@@ -19,9 +19,6 @@ include_once '../config/database.php';
 include_once '../models/invoice.php';
 include_once "../libs/php/utils.php";
 
-// include page header HTML
-include_once '../views/templates/layout_head.php';
-
 $database = new Database();
 $db = $database->getConnection();
 $invoice = new Invoice($db);
@@ -31,6 +28,8 @@ $err = false;
 $generateth = false;
 $tableContent = false;
 $datos = array();
+$fechaInicio = date('d-m-Y');
+$fechaFin = date('d-m-Y');
 
 $listaFacturas = $invoice->countUserInvoices($from_record_num, $records_per_page);
 $total_rows = $invoice->countAllInvoices();
@@ -41,6 +40,13 @@ if ($listaFacturas->rowCount() > 0) {
     while ($data = $listaFacturas->fetch(PDO::FETCH_ASSOC)) {
         $tableContent = true;
         array_push($datos, $data);
+    }
+
+    if (isset($_POST['borrar']) && $_POST['borrar']) {
+
+        $invoice->invoice_id = $_POST['invoiceid2'];
+        $invoice->deleteInvoice();
+        header("Location: {$home_url}controllers/invoice_list.php");
     }
 
 } else {

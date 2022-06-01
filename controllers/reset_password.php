@@ -22,8 +22,6 @@ $user = new User($db);
 $updated1 = false;
 $updated2 = false;
 
-// include page header HTML
-include_once "../views/templates/layout_head.php";
 
 // get given access code
 $access_code=isset($_GET['access_code']) ? $_GET['access_code'] : die("Access code not found.");
@@ -56,7 +54,4 @@ else{
 
  include_once "../views/reset_password.php";
 }
-
-// include page footer HTML
-include_once "../views/templates/layout_foot.php";
 ?>

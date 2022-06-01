@@ -1,6 +1,12 @@
-<div class='col-sm-12'>
-
 <?php
+
+// include page header HTML
+include_once "../views/templates/layout_head.php";
+
+$action = isset($_GET['action']) ? $_GET['action'] : "";
+
+echo "<div class='col-sm-12'>";
+
 if ($action == "reset_link_sent") {
     echo "<div class='alert alert-info'>
                             Password reset link was sent to your email.

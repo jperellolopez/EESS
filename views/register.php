@@ -1,5 +1,11 @@
 <?php
-//echo "<div class='col-md-12'>";
+// include page header HTML
+include_once "../views/templates/layout_head.php";
+
+$action = isset($_GET['action']) ? $_GET['action'] : "";
+
+echo "<div class='col-md-12'>";
+
 if ($action == 'email_exists') {
     echo "<div class='alert alert-danger'>";
     echo "The email you specified is already registered. Please try again or <a href='{$home_url}controllers/login.php'>login.</a>";
@@ -15,9 +21,8 @@ if ($action == 'email_exists') {
 } else if ($action == 'register_err') {
     echo "<div class='alert alert-danger' role='alert'>Unable to register. Please try again.</div>";
 } else if ($action == 'invalid_address') {
-    echo "<div class='alert alert-danger' role='alert'>Introduzca una dirección válida</div>";
+    echo "<div class='alert alert-danger' role='alert'>Introduzca una dirección válida (mín 6 caracteres)</div>";
 }
-
 
 ?>
 

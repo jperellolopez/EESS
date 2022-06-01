@@ -13,12 +13,6 @@ include_once '../config/database.php';
 include_once '../models/user.php';
 include_once "../libs/php/utils.php";
 
-// include page header HTML
-include_once "../views/templates/layout_head.php";
-
-
-$action = isset($_GET['action']) ? $_GET['action'] : "";
-
 // if form was posted
 if(isset($_POST) && $_POST){
 

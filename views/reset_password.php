@@ -1,4 +1,7 @@
 <?php
+// include page header HTML
+include_once "../views/templates/layout_head.php";
+
 echo "<div class='col-sm-12'>";
 
 if ($updated1) {
@@ -24,3 +27,7 @@ echo "<form action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "?access_code={
         </tr>
     </table>
 </form>";
+
+// include page footer HTML
+include_once "../views/templates/layout_foot.php";
+?>
