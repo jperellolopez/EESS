@@ -42,8 +42,8 @@ if (isset($_POST) && !empty($_POST)) {
         $gas_station->longitude = $data['Longitud_(WGS84)'];
         $gas_station->brand = $data['Rótulo'];
         $gas_station->region_id = $data['IDCCAA'];
-        $gas_station->province = $data['IDProvincia'];
-        $gas_station->municipality = $data['IDMunicipio'];
+        $gas_station->province = $data['Provincia'];
+        $gas_station->municipality = $data['Municipio'];
         $gas_station->opening_hours = $data['Horario'];
 
         $gas_station->insertNewGasStation();

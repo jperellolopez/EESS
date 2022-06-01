@@ -29,6 +29,10 @@
                     <a href="<?php echo $home_url; ?>controllers/invoice_map.php">Crear facturas</a>
                 </li>
 
+                <li <?php echo $page_title=="Consulta de facturas" ? "class='active'" : ""; ?>>
+                        <a href="<?php echo $home_url; ?>controllers/invoice_list.php">Consultar facturas</a>
+                </li>
+
                  <li <?php echo $page_title=="Perfil de usuario" ? "class='active'" : ""; ?>>
                  <a href="<?php echo $home_url; ?>controllers/user_profile.php">Perfil de usuario</a>
                  </li>

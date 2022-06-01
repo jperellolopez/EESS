@@ -77,4 +77,20 @@ class Invoice {
 
     }
 
+    public function countUserInvoices($from_record_num, $records_per_page){
+        $query = "SELECT i.invoice_id, gs.brand, gs.address, gs.municipality, i.refuel_date  FROM gas_stations as gs inner join invoices as i on i.gas_station_id = gs.gas_station_id WHERE user_id = ? ORDER BY i.invoice_id DESC LIMIT ?, ?;";
+
+        $stmt = $this->conn->prepare($query);
+
+        $this->user_id=htmlspecialchars(strip_tags($this->user_id));
+        $stmt->bindParam(1, $this->user_id);
+
+        $stmt->bindParam(2, $from_record_num, PDO::PARAM_INT);
+        $stmt->bindParam(3, $records_per_page, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
 }

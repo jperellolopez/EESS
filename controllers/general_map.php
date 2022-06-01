@@ -12,8 +12,6 @@ include_once "login_check.php";
 // include page header HTML
 include_once '../views/templates/layout_head.php';
 
-//echo "<div class='col-lg-12'>";
-
 // to prevent undefined index notice
 $action = isset($_GET['action']) ? $_GET['action'] : "";
 
