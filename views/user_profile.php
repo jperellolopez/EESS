@@ -90,12 +90,12 @@ if (isset($_POST['editoption'])) { ?>
 
             <tr>
                 <td class='width-30-percent'><label for="firstname">Nuevo nombre</label></td>
-                <td><input id="firstname" type='text' pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" minlength="2" maxlength="32" name='firstname' class='form-control' required value="<?php echo isset($_POST['firstname']) ? htmlspecialchars($_POST['firstname'], ENT_QUOTES) : "{$userinfo['firstname']}";  ?>" /></td>
+                <td><input id="firstname" type='text' pattern="^[a-zA-Z\u00C0-\u017F\s]+$" minlength="2" maxlength="32" name='firstname' class='form-control' required value="<?php echo isset($_POST['firstname']) ? htmlspecialchars($_POST['firstname'], ENT_QUOTES) : "{$userinfo['firstname']}";  ?>" /></td>
             </tr>
 
             <tr>
                 <td><label for="lastname">Nuevos apellidos</label></td>
-                <td><input id="lastname" type='text' pattern="[a-zA-Z]+([\s][a-zA-Z]+)*" minlength="3" maxlength="64"   name='lastname' class='form-control' required value="<?php echo isset($_POST['lastname']) ? htmlspecialchars($_POST['lastname'], ENT_QUOTES) : "{$userinfo['lastname']}";  ?>" /></td>
+                <td><input id="lastname" type='text' pattern="^[a-zA-Z\u00C0-\u017F\s]+$" minlength="3" maxlength="64"   name='lastname' class='form-control' required value="<?php echo isset($_POST['lastname']) ? htmlspecialchars($_POST['lastname'], ENT_QUOTES) : "{$userinfo['lastname']}";  ?>" /></td>
             </tr>
 
             <tr>
