@@ -31,13 +31,14 @@ if($_POST){
         $_SESSION['lastname'] = $user->lastname;
         $_SESSION['email'] = $user->email;
 
-        header("Location: {$home_url}controllers/invoice_map.php?action=login_success");
+        if($user->access_level=='Usuario') {
+            header("Location: {$home_url}controllers/invoice_map.php?action=login_success");
+        }
 
-    }
-
-    else{
+   } else {
         $access_denied=true;
     }
+
 }
 
 require_once "../views/login.php"

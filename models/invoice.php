@@ -74,8 +74,8 @@ class Invoice {
 
     }
 
-    public function countUserInvoices($from_record_num, $records_per_page){
-        $query = "SELECT i.invoice_id, gs.brand, gs.address, gs.municipality, i.refuel_date  FROM gas_stations as gs inner join " . $this->table_name . " as i on i.gas_station_id = gs.gas_station_id WHERE user_id = ? ORDER BY i.invoice_id DESC LIMIT ?, ?;";
+    public function getUserInvoices($from_record_num, $records_per_page){
+        $query = "SELECT i.invoice_id, gs.brand, gs.address, gs.municipality, i.refuel_date  FROM gas_stations as gs inner join " . $this->table_name . " as i on i.gas_station_id = gs.gas_station_id WHERE user_id = ? ORDER BY i.refuel_date DESC LIMIT ?, ?;";
 
         $stmt = $this->conn->prepare($query);
 
@@ -132,5 +132,18 @@ class Invoice {
         $num = $stmt->rowCount();
         return $num;
     }
+
+    public function getPdfInvoiceData() {
+        $query = "SELECT i.fuel_type, i.fuel_price, i.money_spent, i.refuel_date, i.created, gs.address as gas_address, gs.postal_code, gs.brand, gs.province, gs.municipality, r.region, gs.opening_hours, u.firstname, u.lastname, u.address, u.postal_code from " . $this->table_name . " as i inner join gas_stations as gs on i.gas_station_id = gs.gas_station_id inner join users as u on i.user_id = u.id inner join regions as r on r.region_id = gs.region_id where i.invoice_id = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(1, $this->invoice_id);
+
+        $stmt->execute();
+        return $stmt;
+
+    }
+
 
 }

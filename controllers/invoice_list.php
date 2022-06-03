@@ -20,23 +20,23 @@ $invoice = new Invoice($db);
 $invoice->user_id = $_SESSION['user_id'];
 $total_rows = 0;
 $err = false;
-$generateth = false;
+$generateTableHeader = false;
 $tableContent = false;
 $datos = array();
 $curDate = date('Y-m-d');
-$fechaInicio = date('d-m-Y');
-$fechaFin = date('d-m-Y');
-$datesearch = false;
-$noncompatibledate = false;
-$errFecha = false;
+$startDate = date('d-m-Y');
+$endDate = date('d-m-Y');
+$dateSearch = false;
+$nonCompatibleDates = false;
+$errDates = false;
 
 if (!isset($_POST['submitInvoiceDate'])) {
 
-$listaFacturas = $invoice->countUserInvoices($from_record_num, $records_per_page);
+$listaFacturas = $invoice->getUserInvoices($from_record_num, $records_per_page);
 $total_rows = $invoice->countAllInvoices();
 
 if ($listaFacturas->rowCount() > 0) {
-    $generateth = true;
+    $generateTableHeader = true;
 
     while ($data = $listaFacturas->fetch(PDO::FETCH_ASSOC)) {
         $tableContent = true;
@@ -47,6 +47,19 @@ if ($listaFacturas->rowCount() > 0) {
 
         $invoice->invoice_id = $_POST['invoiceid2'];
         $invoice->deleteInvoice();
+
+        $filename = null;
+        $path = "../invoices/";
+        $rutas = scandir($path);
+        $pattern = "-".$_POST['invoiceid2']."A";
+
+        foreach ($rutas as $filenames) {
+            if(preg_match('/'.$pattern.'/', $filenames)) {
+                $filename = $filenames;
+            }
+        }
+        $file = $path.$filename;
+        unlink($file);
         header("Location: {$home_url}controllers/invoice_list.php");
     }
 
@@ -56,18 +69,18 @@ if ($listaFacturas->rowCount() > 0) {
 
 } else if (isset($_POST['submitInvoiceDate']) && isset($_POST['fechaInicio']) && isset($_POST['fechaFin'])) {
 
-    $fechaInicio = $_POST['fechaInicio'];
-    $fechaFin = $_POST['fechaFin'];
+    $startDate = $_POST['fechaInicio'];
+    $endDate = $_POST['fechaFin'];
 
-    if ($fechaInicio < $fechaFin) {
+    if ($startDate < $endDate) {
 
-    $facturasPorFecha = $invoice->searchInvoicesByDate($fechaInicio, $fechaFin, $from_record_num, $records_per_page);
-    $total_rows = $invoice->countAllInvoicesByDate($fechaInicio, $fechaFin);
+    $facturasPorFecha = $invoice->searchInvoicesByDate($startDate, $endDate, $from_record_num, $records_per_page);
+    $total_rows = $invoice->countAllInvoicesByDate($startDate, $endDate);
 
     if ($total_rows > 0) {
         $datos = array();
-        $datesearch = true;
-        $generateth = true;
+        $dateSearch = true;
+        $generateTableHeader = true;
 
         while ($data = $facturasPorFecha->fetch(PDO::FETCH_ASSOC)) {
             $tableContent = true;
@@ -75,10 +88,10 @@ if ($listaFacturas->rowCount() > 0) {
         }
 
     } else {
-        $errFecha = true;
+        $errDates = true;
     }
 } else {
-        $noncompatibledate= true;
+        $nonCompatibleDates= true;
     }
 }
     require_once "../views/invoice_list.php";

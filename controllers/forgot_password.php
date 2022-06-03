@@ -26,7 +26,7 @@ if($_POST){
         if($user->updateAccessCode()){
 
             // envia un link de reseteo con el código
-            $body="Hi there.<br /><br />";
+            $body="Hola.<br /><br />";
             $body.="Por favor, pulsa en el siguiente link para resetear tu contraseña: {$home_url}controllers/reset_password.php/?access_code={$access_code}";
             $subject="Restablecimiento de contraseña";
             $send_to_email=$_POST['email'];

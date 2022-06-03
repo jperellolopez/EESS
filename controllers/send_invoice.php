@@ -1,20 +1,22 @@
 <?php
-require_once '../fpdf/fpdf.php';
-include_once "../config/database.php";
-include_once '../models/invoice.php';
+require_once '../config/core.php';
 
-session_start();
-$database = new Database();
-$db = $database->getConnection();
-define('EURO', chr(128));
+if ($_POST['enviarEmail']) {
 
-if (isset($_POST['enviar'])) {
+    require_once '../fpdf/fpdf.php';
+    include_once "../config/database.php";
+    include_once '../models/invoice.php';
+
+    session_start();
+    $database = new Database();
+    $db = $database->getConnection();
+    define('EURO', chr(128));
 
     class myPDF extends FPDF {
 
         function getInvoiceData($db) {
             $invoiceData = new Invoice($db);
-            $invoiceData->invoice_id = $_POST['invoiceid'];
+            $invoiceData->invoice_id = $_POST['invoiceid1'];
             $stmt = $invoiceData->getPdfInvoiceData();
 
             if ($stmt->rowCount() > 0) {
@@ -40,7 +42,7 @@ if (isset($_POST['enviar'])) {
         function userAndGasStationData($db)
         {
             $info = $this->getInvoiceData($db);
-            $_SESSION['ruta'] = $info[12].$info[13]. "-" . $_POST['invoiceid'];
+            $_SESSION['ruta'] = $info[12].$info[13]. "-" . $_POST['invoiceid1'];
             $this->SetFont("Arial", "B", 12);
             $this->setY(30);
             $this->setX(15);
@@ -124,8 +126,57 @@ if (isset($_POST['enviar'])) {
     $pdf->AddPage();
     $pdf->userAndGasStationData($db);
     $pdf->showTable($db);
-    $pdf->Output();
-    //$pdf->Output('F', "../invoices/" . $_SESSION['ruta'] ."A". ".pdf", true);
+    $pdf->Output('F', "../invoices/" . $_SESSION['ruta'] ."A". ".pdf", true);
+
+
+$filename = null;
+$path = "../invoices/";
+$from_name="InfoGasolineras Web";
+$from_mail="admin@infogasolineras.com";
+$mailto = $_SESSION['email'];
+
+$rutas = scandir("../invoices");
+//print_r($rutas);
+$pattern = "-".$_POST['invoiceid1']."A";
+//echo ($pattern);
+
+    foreach ($rutas as $filenames) {
+        if(preg_match('/'.$pattern.'/', $filenames)) {
+            $filename = $filenames;
+        }
+    }
+
+    $file = $path.$filename;
+    $content = file_get_contents( $file);
+    $content = chunk_split(base64_encode($content));
+    $uid = md5(uniqid(time()));
+    $file_name = basename($file);
+    $subject= $_SESSION['firstname'] .", esta es tu factura de infoGasolineras";
+    $message="Hola.\r\n\r\n";
+    $message.="Te hemos enviado como archivo adjunto en este correo la factura que has solicitado en infoGasolineras.\r\n\r\n";
+    $message.="Gracias por utilizar nuestro servicio.";
+
+    $header = "From: ".$from_name." <".$from_mail.">\r\n";
+    //$header .= "Reply-To: ".$replyto."\r\n";
+    $header .= "MIME-Version: 1.0\r\n";
+    $header .= "Content-Type: multipart/mixed; boundary=\"".$uid."\"\r\n\r\n";
+
+    $nmessage = "--".$uid."\r\n";
+    $nmessage .= "Content-type:text/plain; charset=iso-8859-1\r\n";
+    $nmessage .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+    $nmessage .= $message."\r\n\r\n";
+    $nmessage .= "--".$uid."\r\n";
+    $nmessage .= "Content-Type: application/octet-stream; name=\"".$filename."\"\r\n";
+    $nmessage .= "Content-Transfer-Encoding: base64\r\n";
+    $nmessage .= "Content-Disposition: attachment; filename=\"".$file_name."\"\r\n\r\n";
+    $nmessage .= $content."\r\n\r\n";
+    $nmessage .= "--".$uid."--";
+
+    if (mail($mailto, $subject, $nmessage, $header)) {
+        header("Location: {$home_url}controllers/invoice_list.php?action=sent");
+    } else {
+        header("Location: {$home_url}controllers/invoice_list.php?action=cannot_be_sent");
+    }
 
 }
 ?>
