@@ -1,9 +1,12 @@
 <?php
+require_once "../config/core.php";
 require_once '../fpdf/fpdf.php';
 include_once "../config/database.php";
 include_once '../models/invoice.php';
+$require_login = true;
+include_once "../controllers/login_check.php";
 
-session_start();
+//session_start();
 $database = new Database();
 $db = $database->getConnection();
 define('EURO', chr(128));

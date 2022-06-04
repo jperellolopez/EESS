@@ -16,13 +16,6 @@ var selectMunicipio = document.getElementById("selectMunicipio");
 var zoomGeneral = false;
 var isSetFromCCAA = false;
 
-//IDEAS
-//1r mapa
-// Opcional: renderizar una tabla con los precios de los últimos 7 días para la gasolinera seleccionada
-// Opcional: mostrar distancia hasta el marcador en la tabla
-// Opcional: cuando la pantalla se hace pequeña, quitar el mapa y renderizar una lista de todas las gasolineras del municipio seleccionado
-
-
 // no se ha utilizado el endpoint "Listados/ComunidadesAutonomas" porque no proporciona coordenadas, las cuales son imprescindibles para ir moviendo el mapa cuando se selecciona una CCAA
 var arrayListaCCAA = [ {'IDCCAA': 1, 'Nombre': 'ANDALUCÍA', 'Lat': '37.6000000', 'Lng': '-4.5000000'}, {'IDCCAA':2, 'Nombre':  'ARAGÓN', 'Lat': '41.5000000', 'Lng': '-0.6666700'}, {'IDCCAA':3, 'Nombre':  'ASTURIAS', 'Lat': '43.3666200', 'Lng': '-5.8611200'}, {'IDCCAA':4, 'Nombre':  'BALEARES', 'Lat': '39.6099200', 'Lng': '3.0294800'}, {'IDCCAA':5, 'Nombre':  'CANARIAS', 'Lat': '28.0000000', 'Lng': '-15.5000000'}, {'IDCCAA':6, 'Nombre':  'CANTABRIA', 'Lat': '43.2000000', 'Lng': '-4.0333300'}, {'IDCCAA':7, 'Nombre':  'CASTILLA LA MANCHA', 'Lat': '39.8581', 'Lng': '-4.02263'}, {'IDCCAA':8, 'Nombre':  'CASTILLA Y LEÓN', 'Lat': '42.60003', 'Lng': '-5.57032'}, {'IDCCAA':9, 'Nombre':  'CATALUÑA', 'Lat': '41.8204600', 'Lng': '1.8676800'}, {'IDCCAA':10, 'Nombre':  'COMUNIDAD VALENCIANA', 'Lat': '39.5000000', 'Lng': '-0.7500000'}, {'IDCCAA':11, 'Nombre':  'EXTREMADURA', 'Lat': '39.1666700', 'Lng': '-6.1666700'}, {'IDCCAA':12, 'Nombre':  'GALICIA', 'Lat': '42.7550800', 'Lng': '-7.8662100'}, {'IDCCAA':13, 'Nombre':  'MADRID', 'Lat': '40.4165000', 'Lng': '-3.7025600'}, {'IDCCAA':14, 'Nombre':  'MURCIA', 'Lat': '37.9870400', 'Lng': '-1.1300400'}, {'IDCCAA':15, 'Nombre':  'NAVARRA', 'Lat': '42.8233000', 'Lng': '-1.6513800'}, {'IDCCAA':16, 'Nombre':  'PAÍS VASCO', 'Lat': ' 43.0000000', 'Lng': '-2.7500000'}, {'IDCCAA':17, 'Nombre':  'RIOJA (LA)', 'Lat': '42.3000000', 'Lng': '-2.5000000'}, {'IDCCAA':18, 'Nombre':  'CEUTA', 'Lat': '35.8902800', 'Lng': '-5.3075000'}, {'IDCCAA':19, 'Nombre':  'MELILLA', 'Lat': '35.2936900', 'Lng': '-2.9383300'}];
 
@@ -312,14 +305,6 @@ async function updateListaMunicipios() {
 
     // limpia los elementos anteriores antes de crear nuevos
     document.getElementById("selectMunicipio").innerHTML = "";
-
-    // crea las opciones
-    /*
-    let inicial = document.createElement("option");
-    inicial.value="-1";
-    inicial.innerHTML="Seleccione municipio...";
-    selectMunicipio.appendChild(inicial);
-     */
 
     for (let x in arrayListaMunicipios) {
         let option = document.createElement('option');

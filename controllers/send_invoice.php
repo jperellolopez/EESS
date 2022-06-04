@@ -1,5 +1,7 @@
 <?php
 require_once '../config/core.php';
+$require_login=true;
+include_once "../controllers/login_check.php";
 
 if ($_POST['enviarEmail']) {
 

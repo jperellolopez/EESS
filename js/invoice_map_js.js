@@ -183,7 +183,6 @@ function enviarDatos() {
     //oculta el formulario cuando se clica en el botón de enviar
     let formID = document.getElementById('gasStationForm');
 
-
     let inputFecha = document.getElementById('fecha')
 
     //obtener los datos puestos y añadirlos al objeto, despues enviarlo
@@ -406,6 +405,4 @@ function hideloader() {
      return data.ListaEESSPrecio
 
     }
-
-// en la tabla facturas quitar fecha edicion (los tickets no se editarán) y poner fecha de repostaje
 
