@@ -67,8 +67,8 @@ if ($tableContent) {
         echo "</td>";
         echo "</td>";
         echo "<td class='width-30-percent'>";
-        echo "<form id='opcionEnviar' method='post' action='../controllers/send_invoice.php'>";
-        echo "<input type='hidden' name='invoiceid1' value='{$invoiceid}'>";
+        echo "<form id='opcionEnviar' method='post' action='../controllers/invoice_pdf.php'>";
+        echo "<input type='hidden' name='invoiceid' value='{$invoiceid}'>";
         echo "<input type='submit' name='enviarEmail' value='Enviar por Email'>";
         echo '</form>';
         echo "</td>";
