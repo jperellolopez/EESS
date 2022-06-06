@@ -26,7 +26,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : "";
         <select name="selectCCAA" id="selectCCAA" >
             <option value="-1">GENERAL</option>
         </select>
-        <input type="submit" value="Enviar" onclick="updateArrayGasolineras()">
+        <input type="submit" id="btnCCAA" value="Enviar" onclick="updateArrayGasolineras()">
     </div>
 
     <div class="mb-3 div-provincias">
@@ -34,13 +34,13 @@ $action = isset($_GET['action']) ? $_GET['action'] : "";
         <select name="selectProvincia" id="selectProvincia">
             <option value="-1" disabled="disabled" selected="selected">Seleccione provincia...</option>
         </select>
-        <input type="submit" value="Enviar" onclick="getProvinciaValue()">
+        <input type="submit" id="btnProvincia" value="Enviar" onclick="getProvinciaValue()">
     </div>
 
     <div class="mb-3 div-municipios">
         <label for="selectMunicipio" class="form-label">Municipio</label>
         <select name="selectMunicipio" id="selectMunicipio" onChange="getMunicipioValue();">
-            <option value="" disabled="disabled" selected="selected" style="display:none;">Seleccione municipio...</option>
+            <option value="-1" disabled="disabled" selected="selected" style="display:none;">Seleccione municipio...</option>
         </select>
     </div>
 

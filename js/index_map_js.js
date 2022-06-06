@@ -12,6 +12,7 @@ var markers  = L.markerClusterGroup();
 var marker;
 var selectCCAA = document.getElementById("selectCCAA");
 var selectProvincia = document.getElementById("selectProvincia");
+var btnSelectProvincia = document.getElementById("btnProvincia");
 var selectMunicipio = document.getElementById("selectMunicipio");
 var zoomGeneral = false;
 var isSetFromCCAA = false;
@@ -208,18 +209,24 @@ function hideloader() {
      if (opt.value == -1 && !isSetFromCCAA) {
          response = await fetch(resultadoGeneral)
          selectProvincia.disabled = true;
+         btnSelectProvincia.disabled = true;
 
      // cuando se selecciona la opcion general desde una CCAA (recarga marcadores y cambia a vista lejana)
      } else if (opt.value == -1 && isSetFromCCAA) {
          response = await fetch(resultadoGeneral)
          map.flyTo([40.463667, -3.74922], 5);
          selectProvincia.disabled = true;
+         btnSelectProvincia.disabled = true;
+         selectMunicipio.disabled = true;
+
      }
      // cuando se elige una CCAA (carga sólo los de dicha zona y cambia a vista cercana). También carga la lista de provincias
      else {
          response = await fetch(filtroCCAA + opt.value);
          isSetFromCCAA = true;
          selectProvincia.disabled = false;
+         btnSelectProvincia.disabled = false;
+         document.getElementById("selectProvincia").innerHTML = "";
 
      }
 
@@ -249,13 +256,14 @@ async function updateArrayGasolineras(){
 }
 
 async function updateListaProvincias() {
+
+    // limpia los elementos anteriores antes de crear nuevos
+    //document.getElementById("selectProvincia").innerHTML = "";
+
     let opt = selectCCAA.options[selectCCAA.selectedIndex];
     let response = await fetch(provinciasPorComunidad+opt.value);
     arrayListaProvincias = await response.json()
     console.log(arrayListaProvincias)
-
-    // limpia los elementos anteriores antes de crear nuevos
-    document.getElementById("selectProvincia").innerHTML = "";
 
     for (let x in arrayListaProvincias) {
         let option = document.createElement('option');
@@ -263,6 +271,7 @@ async function updateListaProvincias() {
         option.innerHTML= arrayListaProvincias[x]['Provincia'];
         selectProvincia.appendChild(option);
     }
+
 
 }
 
