@@ -1,9 +1,10 @@
 <?php
-echo "<ul class=\"pagination margin-zero\">";
+echo "<ul class=\"pagination \">";
 
 // botón a la 1ra pag
 if($page>1){
-    echo "<li><a href='{$page_url}' title='Ir a la primera página'>";
+    echo "<li class='page-item'><a class='page-link bg-secondary text-light' href='{$page_url}' 
+title='Ir a la primera página'>";
     echo "Primera página";
     echo "</a></li>";
 }
@@ -24,19 +25,19 @@ for ($x=$initial_num; $x<$condition_limit_num; $x++) {
 
         // pag actual
         if ($x == $page) {
-            echo "<li class='active'><a href=\"#\">$x <span class=\"sr-only\">(current)</span></a></li>";
+            echo "<li class='page-item active'><a class='page-link bg-success' href=\"#\">$x </a></li>";
         }
 
         // otras pags
         else {
-            echo "<li><a href='{$page_url}page=$x'>$x</a></li>";
+            echo "<li class='page-item'><a class='page-link bg-secondary text-light' href='{$page_url}page=$x'>$x</a></li>";
         }
     }
 }
 
 // botón a la última pag
 if($page<$total_pages){
-    echo "<li><a href='" .$page_url . "page={$total_pages}' title='La última página es la {$total_pages}.'>";
+    echo "<li class='page-item'><a class='page-link bg-secondary text-light' href='" .$page_url . "page={$total_pages}' title='La última página es la {$total_pages}.'>";
     echo "Última página";
     echo "</a></li>";
 }

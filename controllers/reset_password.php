@@ -1,7 +1,7 @@
 <?php
 include_once "../config/core.php";
 
-$page_title = "Reset Password";
+$page_title = "Resetear contraseña";
 
 include_once "login_check.php";
 

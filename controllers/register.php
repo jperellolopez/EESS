@@ -3,7 +3,7 @@
 include_once "../config/core.php";
 
 // set page title
-$page_title = "Register";
+$page_title = "Registrar nuevo usuario";
 
 include_once "login_check.php";
 

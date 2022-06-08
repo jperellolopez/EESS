@@ -10,6 +10,7 @@ var zoomGeneral = false;
 var objGasolineraSeleccionado;
 var fechaCambiada = false;
 var url = 'http://localhost/EESS/controllers/invoice_map.php';
+var ventanaAviso = document.getElementById('message');
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -29,6 +30,7 @@ async function setupMap(posicion) {
     initMap(posicion.coords.latitude, posicion.coords.longitude);
 
      arrayGasolineras = await getAPI();
+     hideloader()
      placeMarkers();
     // obtiene un array con los marcadores en los límites del mapa al cargarlo
      map.whenReady(function() {
@@ -66,6 +68,7 @@ async function setupMapNoGeolocalizationEnabled() {
     zoomGeneral = true;
     initMap(40.463667, -3.74922);
     arrayGasolineras = await getAPI();
+    hideloader()
     placeMarkers();
     // obtiene un array con los marcadores en los límites del mapa al cargarlo
     map.whenReady(function() {
@@ -212,11 +215,37 @@ function enviarDatos() {
         let datos = Object.assign(objGasolineraSeleccionado, c);
 
         sendToServer(datos);
-        alert("Factura creada con éxito")
+
         formID.style.display="none";
 
+
+        if (ventanaAviso.hasChildNodes()) {
+            ventanaAviso.removeChild(ventanaAviso.children[0]);
+        }
+
+let divaviso = document.createElement("div");
+divaviso.classList.add('alert');
+divaviso.classList.add('alert-success');
+divaviso.classList.add('p-3');
+divaviso.setAttribute("role", "alert");
+let msg = document.createTextNode("La factura se ha creado correctamente.");
+divaviso.appendChild(msg);
+ventanaAviso.appendChild(divaviso);
+
     } else {
-        alert("Faltan campos por completar o los datos no son correctos")
+
+        if (ventanaAviso.hasChildNodes()) {
+            ventanaAviso.removeChild(ventanaAviso.children[0]);
+        }
+
+        let divaviso = document.createElement("div");
+        divaviso.classList.add('alert');
+        divaviso.classList.add('alert-danger');
+        divaviso.classList.add('p-3');
+        divaviso.setAttribute("role", "alert")
+        let msg = document.createTextNode("Faltan campos por completar o los datos no son correctos");
+        divaviso.appendChild(msg);
+        ventanaAviso.appendChild(divaviso);
 
     }
 }
@@ -240,7 +269,6 @@ function colorChange() {
     }
     this._icon.classList.add("colorChange")
 
-    let colorFondoFila = "green";
     var direccionCompleta;
 
     gasStationsWithinBounds.forEach(gasolinera => {
@@ -256,12 +284,15 @@ function colorChange() {
     for (let i = 0; i<tr.length; i++) {
         let celdas = tr[i].getElementsByTagName('td');
 
-        tr[i].removeAttribute("style");
+        tr[i].classList.remove("table-success")
+        tr[i].classList.add("table-secondary")
 
         for (let celda = 0; celda < celdas.length; celda++) {
 
             if (celdas[celda].innerHTML === direccionCompleta) {
-                celdas[celda].parentNode.style.backgroundColor = colorFondoFila;
+
+                celdas[celda].parentNode.classList.remove("table-secondary");
+                celdas[celda].parentNode.classList.add("table-success");
             }
         }
     }
@@ -296,6 +327,8 @@ function tablaGasolineras() {
 
     let encabezados = ['Rótulo', 'Dirección', 'Precio Gasolina 95', 'Precio Gasolina 98', 'Precio Gasoil', 'Precio Diésel +', 'Horario'];
 
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
     let headerRow = document.createElement('tr')
 
     encabezados.forEach(texto => {
@@ -304,11 +337,13 @@ function tablaGasolineras() {
             let textNode = document.createTextNode(texto);
             header.appendChild(textNode);
             headerRow.appendChild(header);
+            headerRow.classList.add("table-secondary");
         }
 
     })
 
-    table.appendChild(headerRow);
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
 
     gasStationsWithinBounds.forEach(gasolinera => {
 
@@ -328,13 +363,15 @@ function tablaGasolineras() {
 
                 let textNode = document.createTextNode(texto);
                 cell.appendChild(textNode);
+                row.classList.add("table-secondary");
                 row.appendChild(cell);
 
             }
 
         })
 
-    table.appendChild(row);
+        tbody.appendChild(row);
+    table.appendChild(tbody);
 
     })
 
@@ -394,7 +431,7 @@ function hideloader() {
     }
 
     let data = await response.json()
-     hideloader()
+     //hideloader()
 
     let fechaCompleta = data.Fecha;
     let fecha = fechaCompleta.split(' ')[0];
