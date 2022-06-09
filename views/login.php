@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var string $home_url
+ * @var $access_denied
+ */
+
 
 include_once "../views/templates/layout_head.php";
 $action=isset($_GET['action']) ? $_GET['action'] : "";

@@ -1,4 +1,11 @@
 <?php
+/**
+ * @var string $home_url
+ * @var $access_code
+ * @var $page_title
+ * @var $updated1
+ * @var $updated2
+ */
 
 include_once "../views/templates/layout_head.php";
 ?>

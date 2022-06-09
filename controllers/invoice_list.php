@@ -2,6 +2,8 @@
 
 /**
  * @var string $home_url
+ * @var $from_record_num
+ * @var $records_per_page
  */
 
 

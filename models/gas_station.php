@@ -17,12 +17,19 @@ class Gas_station {
     public $opening_hours;
     public $created;
 
-    // constructor
-    public function __construct($db){
+    /**
+     * Constructor
+     * @param PDO $db
+     */
+    public function __construct(PDO $db){
         $this->conn = $db;
     }
 
-    // comprueba si la gasolinera existe
+
+    /**
+     * comprueba si la gasolinera existe
+     * @return bool
+     */
     public function checkGasStationExists(){
 
         $query = "SELECT gas_station_id, address, postal_code, brand, region_id, province, municipality, opening_hours FROM " . $this->table_name . " WHERE gas_station_id = ?";
@@ -46,7 +53,10 @@ class Gas_station {
 
     }
 
-    // inserta un nueva entrada en la tabla gas_stations
+    /**
+     * inserta un nueva entrada en la tabla gas_stations
+     * @return bool
+     */
     public function insertNewGasStation() {
 
         $this->created=date('Y-m-d H:i:s');

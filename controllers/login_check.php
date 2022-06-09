@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var string $home_url
+ */
+
 // login check para usuarios registrados
 if(isset($require_login) && $require_login==true){
     // if si se requiere login, redirige a la pág de login

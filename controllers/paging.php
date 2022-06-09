@@ -1,4 +1,12 @@
 <?php
+/**
+ * @var string $home_url
+ * @var $total_rows
+ * @var $records_per_page
+ * @var $page
+ * @var $page_url
+ */
+
 echo "<ul class=\"pagination \">";
 
 // botón a la 1ra pag

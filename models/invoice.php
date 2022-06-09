@@ -13,12 +13,18 @@ class Invoice {
     public $refuel_date;
     public $created;
 
-    // constructor
-    public function __construct($db){
+    /**
+     * Constructor
+     * @param PDO $db
+     */
+    public function __construct(PDO $db){
         $this->conn = $db;
     }
 
-    // cuenta las facturas para paginarlas
+    /**
+     * cuenta las facturas para paginarlas
+     * @return mixed
+     */
     public function countAllInvoices(){
 
     $query = "SELECT invoice_id FROM " . $this->table_name . " where user_id = :user_id";
@@ -34,6 +40,10 @@ class Invoice {
      return $num;
     }
 
+    /**
+     * Inserta una nueva factura
+     * @return bool
+     */
     public function insertNewInvoice() {
 
         $this->created=date('Y-m-d H:i:s');
@@ -74,6 +84,12 @@ class Invoice {
 
     }
 
+    /**
+     * Obtiene los datos de una factura para mostrar en la lista
+     * @param $from_record_num
+     * @param $records_per_page
+     * @return mixed
+     */
     public function getUserInvoices($from_record_num, $records_per_page){
         $query = "SELECT i.invoice_id, gs.brand, gs.address, gs.municipality, i.refuel_date  FROM gas_stations as gs inner join " . $this->table_name . " as i on i.gas_station_id = gs.gas_station_id WHERE user_id = ? ORDER BY i.refuel_date DESC LIMIT ?, ?;";
 
@@ -90,6 +106,9 @@ class Invoice {
         return $stmt;
     }
 
+    /**
+     * Borra una factura
+     */
     public function deleteInvoice() {
         $query = "DELETE FROM " . $this->table_name . " WHERE invoice_id = ?";
 
@@ -101,6 +120,14 @@ class Invoice {
 
     }
 
+    /**
+     * Busca facturas entre un rango de fechas (paginado)
+     * @param $date1
+     * @param $date2
+     * @param $from_record_num
+     * @param $records_per_page
+     * @return mixed
+     */
     public function searchInvoicesByDate($date1, $date2, $from_record_num, $records_per_page) {
 
             $query = "SELECT i.invoice_id, gs.brand, gs.address, gs.municipality, i.refuel_date  FROM gas_stations as gs inner join " . $this->table_name . " as i on i.gas_station_id = gs.gas_station_id WHERE user_id = ? AND i.refuel_date BETWEEN '".$date1."' AND '".$date2."' ORDER BY i.refuel_date DESC LIMIT ?, ?;";
@@ -118,6 +145,12 @@ class Invoice {
         return $stmt;
     }
 
+    /**
+     * Busca facturas en un rango de fechas
+     * @param $date1
+     * @param $date2
+     * @return mixed
+     */
     public function countAllInvoicesByDate($date1, $date2) {
 
             $query = "SELECT i.invoice_id, gs.brand, gs.address, gs.municipality, i.refuel_date  FROM gas_stations as gs inner join " . $this->table_name . " as i on i.gas_station_id = gs.gas_station_id WHERE user_id = ? AND i.refuel_date BETWEEN '".$date1."' AND '".$date2."'";
@@ -133,6 +166,10 @@ class Invoice {
         return $num;
     }
 
+    /**
+     * Obtiene los datos necesarios para llenar todos los campos de una factura en el PDF
+     * @return mixed
+     */
     public function getPdfInvoiceData() {
         $query = "SELECT i.fuel_type, i.fuel_price, i.money_spent, i.refuel_date, i.created, gs.address as gas_address, gs.postal_code, gs.brand, gs.province, gs.municipality, r.region, gs.opening_hours, u.firstname, u.lastname, u.address, u.postal_code from " . $this->table_name . " as i inner join gas_stations as gs on i.gas_station_id = gs.gas_station_id inner join users as u on i.user_id = u.id inner join regions as r on r.region_id = gs.region_id where i.invoice_id = ?";
 

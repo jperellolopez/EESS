@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var string $home_url
+ * @var $page_title
+ */
+?>
+
 <!DOCTYPE html>
 <html lang="es" class="h-100">
 <head>

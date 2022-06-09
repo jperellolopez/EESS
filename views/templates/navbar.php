@@ -1,4 +1,10 @@
 <!-- navbar -->
+<?php
+/**
+ * @var string $home_url
+ * @var $page_title
+ */
+?>
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
         <span class="navbar-brand"><i class="fas fa-solid fa-gas-pump"></i> infoGasolineras</span>

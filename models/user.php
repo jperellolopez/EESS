@@ -19,12 +19,18 @@ class User{
     public $created;
     public $modified;
 
-// constructor
+    /**
+     * Constructor
+     * @param PDO $db
+     */
   public function __construct(PDO $db){
       $this->conn = $db;
   }
 
-  //comprueba si el email existe
+    /**
+     * Comprueba si el email introducido ya existe en la base de datos
+     * @return bool
+     */
   public function emailExists(){
 
       $query = "SELECT id, firstname, lastname, access_level, password, status, created
@@ -60,7 +66,10 @@ class User{
       return false;
   }
 
-  // comprueba si el email introducido ya está asignado a otro usuario (true) o está libre (false)
+    /**
+     * comprueba si el email introducido ya está asignado a otro usuario (true) o está libre (false)
+     * @return bool
+     */
   public function repeatedEmail() {
 
       $query = "SELECT id
@@ -86,7 +95,10 @@ class User{
       return false;
   }
 
-  // crea un usuario
+    /**
+     * crea un nuevo usuario
+     * @return bool
+     */
   public function create(){
 
       $this->created=date('Y-m-d H:i:s');
@@ -141,7 +153,10 @@ class User{
 
   }
 
-  // consulta si existe el código de acceso proporcionado
+    /**
+     * consulta si existe el código de acceso proporcionado
+     * @return bool
+     */
   public function accessCodeExists(){
 
       $query = "SELECT id
@@ -168,7 +183,10 @@ class User{
 
   }
 
-  // usado en la verificación de email
+    /**
+     * actualiza el status de usuario si el código de acceso es correcto
+     * @return bool
+     */
   public function updateStatusByAccessCode(){
 
       $query = "UPDATE " . $this->table_name . "
@@ -190,7 +208,10 @@ class User{
       return false;
   }
 
-  // usado con la caract. de contraseña olvidad
+    /**
+     * Actualiza el código de acceso cuando se usa la caract. de contraseña olvidada
+     * @return bool
+     */
   public function updateAccessCode(){
 
       $query = "UPDATE
@@ -215,7 +236,10 @@ class User{
       return false;
   }
 
-// usado con la caract. de contraseña olvidad
+    /**
+     * Actualiza la contraseña del usuario
+     * @return bool
+     */
   public function updatePassword(){
 
       $query = "UPDATE " . $this->table_name . "
@@ -238,6 +262,10 @@ class User{
       return false;
   }
 
+    /**
+     * Obtiene los datos del usuario
+     * @return mixed
+     */
     public function showUserData() {
         $query = "SELECT firstname, lastname, contact_number, address, email, postal_code, created, modified FROM " . $this->table_name . " WHERE id = ?";
 
@@ -253,6 +281,10 @@ class User{
 
     }
 
+    /**
+     * Edita los datos del usuario
+     * @return bool
+     */
     public function editProfile()
     {
         $query = "UPDATE " . $this->table_name . "

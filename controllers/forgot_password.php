@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @var string $home_url
+ */
+
 include_once "../config/core.php";
 $page_title = "Restablecer contraseña";
 include_once "../controllers/login_check.php";

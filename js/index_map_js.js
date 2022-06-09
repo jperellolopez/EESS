@@ -34,7 +34,6 @@ for (let x in arrayListaCCAA) {
 }
 
 //MAPA
-// funcion onload en index.php
 function locate() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(setupMap, showError);
@@ -203,7 +202,7 @@ function hideloader() {
      if (opt.value > 0 && opt.value < 10 && opt.value.charAt(0) !== "0") {
          opt.value = "0"+opt.value;
      }
-     console.log('ccaa value', opt.value)
+     //console.log('ccaa value', opt.value)
 
      // mueve el mapa a las coordenadas de la ccaa elegida en el formulario
      arrayListaCCAA.forEach(function(ccaa) {
@@ -261,18 +260,15 @@ async function updateArrayGasolineras(){
     let noFound = document.getElementById('noFound');
     noFound.style.display = "none";
 
-    console.log('Array general', arrayGasolineras)
+    //console.log('Array general', arrayGasolineras)
 }
 
 async function updateListaProvincias() {
 
-    // limpia los elementos anteriores antes de crear nuevos
-    //document.getElementById("selectProvincia").innerHTML = "";
-
     let opt = selectCCAA.options[selectCCAA.selectedIndex];
     let response = await fetch(provinciasPorComunidad+opt.value);
     arrayListaProvincias = await response.json()
-    console.log(arrayListaProvincias)
+    //console.log(arrayListaProvincias)
 
     for (let x in arrayListaProvincias) {
         let option = document.createElement('option');
@@ -280,8 +276,6 @@ async function updateListaProvincias() {
         option.innerHTML= arrayListaProvincias[x]['Provincia'];
         selectProvincia.appendChild(option);
     }
-
-
 }
 
 // consulta en endpoint con el id de provincia seleccionado y renderiza los marcadores
@@ -289,7 +283,7 @@ async function getProvinciaValue() {
     let tablaInfo = document.getElementById("tablaInfo");
     tablaInfo.innerHTML = "";
     let optProvincia = selectProvincia.options[selectProvincia.selectedIndex];
-    console.log('valor prov', optProvincia.value)
+    //console.log('valor prov', optProvincia.value)
 
     if (optProvincia.value == -1) {
         selectMunicipio.disabled = true;
@@ -303,7 +297,7 @@ async function getProvinciaValue() {
 
     arrayGasolineras = data.ListaEESSPrecio;
 
-    console.log('eess provincia', arrayGasolineras)
+    //console.log('eess provincia', arrayGasolineras)
 
     placeMarkers()
 
@@ -316,10 +310,10 @@ async function getProvinciaValue() {
 
 async function updateListaMunicipios() {
     let opt = selectProvincia.options[selectProvincia.selectedIndex].value;
-    console.log('cod prov', opt)
+    //console.log('cod prov', opt)
     let response = await fetch(municipiosPorProvincia+opt);
     arrayListaMunicipios = await response.json()
-    console.log('lista munic', arrayListaMunicipios)
+    //console.log('lista munic', arrayListaMunicipios)
 
     // limpia los elementos anteriores antes de crear nuevos
     document.getElementById("selectMunicipio").innerHTML = "";
@@ -337,7 +331,7 @@ async function getMunicipioValue() {
     let tablaInfo = document.getElementById("tablaInfo");
     tablaInfo.innerHTML = "";
     let optMunicipio = selectMunicipio.options[selectMunicipio.selectedIndex];
-    console.log('valor municipio', optMunicipio.value)
+    //console.log('valor municipio', optMunicipio.value)
 
    let response = await fetch(filtroMunicipio+optMunicipio.value);
 
@@ -353,7 +347,7 @@ async function getMunicipioValue() {
         noFound.style.display = "none";
     }
 
-    console.log('eess municipio', arrayGasolineras)
+    //console.log('eess municipio', arrayGasolineras)
 
     placeMarkers()
 }

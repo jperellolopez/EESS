@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var string $home_url
+ */
+
 require_once "../config/core.php";
 require_once '../fpdf/fpdf.php';
 include_once "../config/database.php";

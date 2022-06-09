@@ -1,4 +1,17 @@
 <?php
+/**
+ * @var $err
+ * @var $dateSearch
+ * @var $nonCompatibleDates
+ * @var $errDates
+ * @var $startDate
+ * @var $endDate
+ * @var $generateTableHeader
+ * @var $curDate
+ * @var $tableContent
+ * @var $datos
+ */
+
 
 include_once '../views/templates/layout_head.php';
 $action = isset($_GET['action']) ? $_GET['action'] : "";
@@ -71,7 +84,9 @@ $action = isset($_GET['action']) ? $_GET['action'] : "";
                         if ($tableContent) { ?>
                         <tbody>
                         <?php foreach ($datos as $row) {
-                            $invoiceid = $row['invoice_id']; ?>
+                            $invoiceid = $row['invoice_id'];
+                            ?>
+
                             <tr>
                                 <td>
                                     <?php echo date('d-m-Y', strtotime($row['refuel_date'])); ?>
@@ -107,17 +122,12 @@ $action = isset($_GET['action']) ? $_GET['action'] : "";
                         </tbody>
                     </table>
                 </div>
-
-            <?php } ?>
-
-                <?php
+                <?php }
                 $page_url = "../controllers/invoice_list.php?";
                 include_once "../controllers/paging.php";
                 ?>
-
             </div>
         </div>
-
     </div>
 
 <?php

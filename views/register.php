@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var string $home_url
+ * @var $page_title
+ */
 
 include_once "../views/templates/layout_head.php";
 

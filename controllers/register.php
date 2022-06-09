@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var string $home_url
+ */
+
 // core configuration
 include_once "../config/core.php";
 
