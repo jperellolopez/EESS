@@ -20,7 +20,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : "";
     <hr class="bg-secondary border-2 border-top border-secondary">
     <div class="container-fluid">
         <div class="row d-flex justify-content-center align-items-center">
-            <div class="col-12 col-md-8 col-lg-6">
+            <div class="col-12 col-md-10 col-lg-8">
                 <?php
                 $msgSent = "<div class='alert alert-success mt-3' role='alert'>La factura se ha enviado a tu dirección de correo electrónico.</div>";
                 $msgNotSent = "<div class='alert alert-danger mt-3' role='alert'>El email no ha podido ser enviado.</div>";
@@ -50,7 +50,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : "";
         </div>
 
         <div class="row d-flex justify-content-center align-items-center">
-            <div class="col-md-12  col-lg-9 col-xl-6">
+            <div class="col-md-12 col-lg-10 col-xl-8">
 
                 <?php if ($generateTableHeader) { ?>
 
